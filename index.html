@@ -68,19 +68,21 @@ const supabase = window.supabase.createClient(
       {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
       {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
     ];
-  async function renderAds();
-  {
+/*
+async function loadAdsFromSupabase() {
 
   const { data, error } = await supabase
     .from('annonces')
     .select('*');
 
   if (error) {
-    console.error(error);
+    console.er*or(error);
     return;
   }
 
- console.log("Annonces Supabase :", data);
+  cons*le.log("Annonces Supabase :", data*;
+}
+*/
 
 }
     let selected=null;
@@ -90,7 +92,7 @@ const supabase = window.supabase.createClient(
     function openMessage(mode){const pseudo=document.getElementById('pseudoInput')?.value||'Marie75';closeModal('detailModal');document.getElementById('messageTitle').textContent=mode==='interest'?'Prendre contact avec la co-vacancière':'Poser une question';document.getElementById('messageSubject').value=mode==='interest'?`${pseudo} est intéressée pour vous accompagner en vacances !`:`${pseudo} veut vous poser une question`;document.getElementById('messageBody').value=mode==='interest'?`Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`:`Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;openModal('messageModal')}
     function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
     document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-loadAdsFromSupabase();
+
 renderAds();
   </script>
 </body>
