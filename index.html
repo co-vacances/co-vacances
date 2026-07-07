@@ -76,15 +76,14 @@ async function loadAdsFromSupabase() {
     .select('*');
 
   if (error) {
-    console.er*or(error);
+    onsole.error(error);
     return;
   }
 
-  cons*le.log("Annonces Supabase :", data*;
+console.log("Annonces Supabase :", data);
 }
 */
 
-}
     let selected=null;
     function renderAds(){document.getElementById('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><img src="${a.img}" alt="${a.region}"><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p><p><strong>Prix :</strong> ${a.price}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
     function openModal(id){document.getElementById(id).classList.add('open')} function closeModal(id){document.getElementById(id).classList.remove('open')} 
