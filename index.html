@@ -46,7 +46,17 @@
   <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body"><div class="detail-grid"><img id="detailImage" src="" alt=""><div><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="concept-text"></p><div class="detail-list" id="detailFacts"></div><div class="modal-actions"><button class="btn secondary" onclick="openMessage('interest')">Ça m’intéresse !</button><button class="btn ghost" onclick="openMessage('question')">Poser une question</button></div></div></div></div></div></div>
   <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
   <div id="toast" class="toast"></div>
-  <script>
+  <script src.jsdelivr.net/npm/@supabase/supabase-js@2script><script 
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
     const ads=[
       {id:1,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',age:'Julie, 39 ans',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août',link:'https://www.exemple-location-vendee.fr',home:'Maison 3 chambres, 4 lits, jardin clos.'},
       {id:2,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',age:'Camille, 34 ans',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet',link:'Non renseigné',home:'Appartement proche plage, canapé-lit disponible.'},
@@ -57,6 +67,20 @@
       {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
       {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
     ];
+  async function loadAdsFromSupabase() {
+
+  const { data, error } = await supabase
+    .from('annonces')
+    .select('*');
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+ console.log("Annonces Supabase :", data);
+
+}
     let selected=null;
     function renderAds(){document.getElementById('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><img src="${a.img}" alt="${a.region}"><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p><p><strong>Prix :</strong> ${a.price}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
     function openModal(id){document.getElementById(id).classList.add('open')} function closeModal(id){document.getElementById(id).classList.remove('open')} 
@@ -64,7 +88,8 @@
     function openMessage(mode){const pseudo=document.getElementById('pseudoInput')?.value||'Marie75';closeModal('detailModal');document.getElementById('messageTitle').textContent=mode==='interest'?'Prendre contact avec la co-vacancière':'Poser une question';document.getElementById('messageSubject').value=mode==='interest'?`${pseudo} est intéressée pour vous accompagner en vacances !`:`${pseudo} veut vous poser une question`;document.getElementById('messageBody').value=mode==='interest'?`Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`:`Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;openModal('messageModal')}
     function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
     document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-    renderAds();
+loadAdsFromSupabase();
+renderAds();
   </script>
 </body>
 </html>
