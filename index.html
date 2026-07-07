@@ -46,9 +46,9 @@
   <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body"><div class="detail-grid"><img id="detailImage" src="" alt=""><div><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="concept-text"></p><div class="detail-list" id="detailFacts"></div><div class="modal-actions"><button class="btn secondary" onclick="openMessage('interest')">Ça m’intéresse !</button><button class="btn ghost" onclick="openMessage('question')">Poser une question</button></div></div></div></div></div></div>
   <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
   <div id="toast" class="toast"></div>
-  <script src.jsdelivr.net/npm/@supabase/supabase-js@2script><script 
-  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co/rest/v1/";
 const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
