@@ -241,7 +241,7 @@ window.publierAnnonce = async function() {
     .select();
 
   if (error) {
-    console.error("Erreur Supabase :", error);
+ console.log("Code :", error.code);2console.log("Message :", error.message);3console.log("Details :", error.details);4console.log("Erreur complète :", error);
 
     if (typeof showToast === "function") {
       showToast("Erreur lors de la publication");
