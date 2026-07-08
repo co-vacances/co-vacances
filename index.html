@@ -198,7 +198,7 @@ window.publierAnnonce = async function() {
     .insert([nouvelleAnnonce]);
 
   if (error) {
-    console.error("Erreur Supabase :", error);
+    alert(JSON.stringify(error, null, 2));
     showToast("Erreur lors de la publication");
     return;
   }
