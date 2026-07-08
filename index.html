@@ -96,31 +96,101 @@ console.log("Annonces Supabase :", data);
 }
 */
 
-    let selected=null;
-    function renderAds(){document.getElementById('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><img src="${a.img}" alt="${a.region}"><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p><p><strong>Prix :</strong> ${a.price}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
-    function openModal(id){document.getElementById(id).classList.add('open')} function closeModal(id){document.getElementById(id).classList.remove('open')} 
-    function openDetail(id){selected=ads.find(a=>a.id===id);document.getElementById('detailTitle').textContent='Annonce de '+selected.pseudo;document.getElementById('detailImage').src=selected.img;document.getElementById('detailAff').textContent='💕 '+selected.aff+' d’affinités';document.getElementById('detailPlace').textContent=selected.lieu+' — '+selected.region;document.getElementById('detailDesc').textContent=selected.desc;document.getElementById('detailFacts').innerHTML=`<p><strong>Lien du lieu :</strong> ${selected.link}</p><p><strong>Participants déjà enregistrés :</strong> ${selected.adults}</p><p><strong>Nombre d’enfant et âge :</strong> ${selected.kids}</p><p><strong>Places restantes :</strong> ${selected.places}</p><p><strong>Conditions d’hébergement :</strong> ${selected.home}</p><p><strong>Prix / participation :</strong> ${selected.price}</p><p><strong>Dates proposées :</strong> ${selected.dates}</p>`;openModal('detailModal')}
-    function openMessage(mode){const pseudo=document.getElementById('pseudoInput')?.value||'Marie75';closeModal('detailModal');document.getElementById('messageTitle').textContent=mode==='interest'?'Prendre contact avec la co-vacancière':'Poser une question';document.getElementById('messageSubject').value=mode==='interest'?`${pseudo} est intéressée pour vous accompagner en vacances !`:`${pseudo} veut vous poser une question`;document.getElementById('messageBody').value=mode==='interest'?`Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`:`Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;openModal('messageModal')}
-    function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-async function publierAnnonce() {
+let selected = null;
 
+function renderAds() {
+  document.getElementById('adsGrid').innerHTML = ads.map(a => `
+    <article class="ad" onclick="openDetail(${a.id})">
+      <div class="ad-img">
+        <img src="${a.img}" alt="${a.region}">
+        <span class="aff">💕 ${a.aff}</span>
+        <span class="price">${a.price}</span>
+      </div>
+      <div class="ad-body">
+        <h3>${a.lieu}</h3>
+        <p class="muted">📍 ${a.region} • 📅 ${a.dates}</p>
+        <p class="desc">${a.desc}</p>
+        <div class="facts">
+          <p><strong>Participants :</strong> ${a.adults}</p>
+          <p><strong>Enfants :</strong> ${a.kids}</p>
+          <p><strong>Places restantes :</strong> ${a.places}</p>
+          <p><strong>Prix :</strong> ${a.price}</p>
+        </div>
+        <button class="btn primary">Voir le séjour</button>
+      </div>
+    </article>
+  `).join('');
+}
+
+window.openModal = function(id) {
+  document.getElementById(id).classList.add('open');
+};
+
+window.closeModal = function(id) {
+  document.getElementById(id).classList.remove('open');
+};
+
+window.openDetail = function(id) {
+  selected = ads.find(a => a.id === id);
+
+  document.getElementById('detailTitle').textContent = 'Annonce de ' + selected.pseudo;
+  document.getElementById('detailImage').src = selected.img;
+  document.getElementById('detailAff').textContent = '💕 ' + selected.aff + ' d’affinités';
+  document.getElementById('detailPlace').textContent = selected.lieu + ' — ' + selected.region;
+  document.getElementById('detailDesc').textContent = selected.desc;
+
+  document.getElementById('detailFacts').innerHTML = `
+    <p><strong>Lien du lieu :</strong> ${selected.link}</p>
+    <p><strong>Participants déjà enregistrés :</strong> ${selected.adults}</p>
+    <p><strong>Nombre d’enfant et âge :</strong> ${selected.kids}</p>
+    <p><strong>Places restantes :</strong> ${selected.places}</p>
+    <p><strong>Conditions d’hébergement :</strong> ${selected.home}</p>
+    <p><strong>Prix / participation :</strong> ${selected.price}</p>
+    <p><strong>Dates proposées :</strong> ${selected.dates}</p>
+  `;
+
+  openModal('detailModal');
+};
+
+window.openMessage = function(mode) {
+  const pseudo = document.getElementById('pseudoInput')?.value || 'Marie75';
+
+  closeModal('detailModal');
+
+  document.getElementById('messageTitle').textContent =
+    mode === 'interest'
+      ? 'Prendre contact avec la co-vacancière'
+      : 'Poser une question';
+
+  document.getElementById('messageSubject').value =
+    mode === 'interest'
+      ? `${pseudo} est intéressée pour vous accompagner en vacances !`
+      : `${pseudo} veut vous poser une question`;
+
+  document.getElementById('messageBody').value =
+    mode === 'interest'
+      ? `Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`
+      : `Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;
+
+  openModal('messageModal');
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+window.publierAnnonce = async function() {
   const nouvelleAnnonce = {
-
     lien_hebergement: document.getElementById("annonceLien").value,
-
-    région: document.getElementById("annonceRegion").value,
-
+    "région": document.getElementById("annonceRegion").value,
     participants_valides: document.getElementById("annonceParticipants").value,
-
     enfants: document.getElementById("annonceEnfants").value,
-
-     places_restantes: document.getElementById("annoncePlaces").value,
-
+    places_restantes: document.getElementById("annoncePlaces").value,
     prix: document.getElementById("annoncePrix").value,
-
     description: document.getElementById("annonceDescription").value
-
   };
 
   const { data, error } = await db
@@ -128,19 +198,24 @@ async function publierAnnonce() {
     .insert([nouvelleAnnonce]);
 
   if (error) {
-
-    console.error(error);
-
+    console.error("Erreur Supabase :", error);
     showToast("Erreur lors de la publication");
-
     return;
   }
 
+  console.log("Annonce ajoutée :", data);
   showToast("Annonce publiée ✅");
-
   closeModal("proposeModal");
+};
 
-}
+document.querySelectorAll('.modal').forEach(m =>
+  m.addEventListener('click', e => {
+    if (e.target === m) {
+      m.classList.remove('open');
+    }
+  })
+);
+
 renderAds();
   </script>
 </body>
