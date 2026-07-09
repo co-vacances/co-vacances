@@ -268,6 +268,42 @@ window.publierAnnonce = async function() {
 };
 </script>
 ``
-  
+
+  <script>
+window.publierAnnonce = async function() {
+  const dbCoVacances = window.supabase.createClient(
+    "https://xixsokdzqqvqxfwpdche.supabase.co",
+    "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt"
+  );
+
+  const nouvelleAnnonce = {
+    lien_hebergement: document.getElementById("annonceLien").value,
+    "région": document.getElementById("annonceRegion").value,
+    participants_valides: document.getElementById("annonceParticipants").value,
+    enfants: document.getElementById("annonceEnfants").value,
+    places_restantes: document.getElementById("annoncePlaces").value,
+    prix: document.getElementById("annoncePrix").value,
+    description: document.getElementById("annonceDescription").value
+  };
+
+  const { data, error } = await dbCoVacances
+    .from("annonces")
+    .insert([nouvelleAnnonce])
+    .select();
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+    alert("Erreur lors de la publication : " + error.message);
+    return;
+  }
+
+  console.log("Annonce ajoutée :", data);
+  alert("Annonce publiée ✅");
+
+  if (typeof closeModal === "function") {
+    closeModal("proposeModal");
+  }
+};
+</script>
 </body>
 </html>
