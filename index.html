@@ -1,456 +1,140 @@
+V2 :8 juillet
 
-import React, { useMemo, useState } from "react";
-import { Search, Calendar, TrainFront, FileText, ClipboardCheck, CheckCircle2, Hourglass, Wrench, ExternalLink, X, Plus, Pencil, ChevronDown, LogOut, Settings, BarChart3, Home, Truck, ReceiptText } from "lucide-react";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Co-Vacances - Prototype V2</title>
+  <style>
+    :root{
+      --lagoon:#3BAFDA;--lagoon-dark:#2c95bd;--coral:#FF7A59;--coral-dark:#ef6340;
+      --sun:#FFC857;--sand:#FFFDF8;--soft:#64748B;--text:#1E293B;--mint:#DFF7F8;
+      --rose:#FFEAE3;--yellow:#FFF3D6;--lav:#F0ECFF;--border:#E2E8F0;--shadow:0 18px 45px rgba(15,23,42,.12);
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--sand);color:var(--text)}
+    a{color:inherit;text-decoration:none}.container{width:min(1180px,92%);margin:auto}.btn{border:0;border-radius:18px;padding:14px 22px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 10px 22px rgba(15,23,42,.12)}
+    .btn:hover{transform:translateY(-2px)}.primary{background:var(--lagoon);color:white}.primary:hover{background:var(--lagoon-dark)}.secondary{background:var(--coral);color:white}.secondary:hover{background:var(--coral-dark)}.ghost{background:white;color:var(--text);border:1px solid var(--border)}
+    .topbar{position:sticky;top:0;z-index:40;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,232,240,.7)}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:12px}.logo{height:52px;width:52px;border-radius:18px;background:white;display:grid;place-items:center;font-size:27px;box-shadow:var(--shadow)}
+    .brand h1{font-size:31px;margin:0;letter-spacing:-1px}.brand h1 span:first-child{color:var(--lagoon)}.brand h1 span:last-child{color:var(--coral)}.brand small{color:var(--soft);font-weight:700}.nav-links{display:flex;gap:26px;color:#334155;font-size:14px;font-weight:800}.nav-actions{display:flex;gap:10px;align-items:center}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#E8F8FC 0%,#FFFDF8 45%,#FFEFE8 100%);padding:70px 0 90px}.blob{position:absolute;border-radius:999px;filter:blur(40px);opacity:.65}.b1{right:-90px;top:-80px;width:380px;height:380px;background:var(--sun)}.b2{left:-90px;bottom:0;width:300px;height:300px;background:var(--lagoon);opacity:.25}.hero-grid{position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}.pill{display:inline-flex;gap:8px;background:white;border:1px solid #f7ddd2;color:var(--coral);padding:11px 16px;border-radius:999px;font-weight:900;box-shadow:0 8px 18px rgba(15,23,42,.06)}
+    h2.hero-title{font-size:clamp(42px,6.5vw,76px);line-height:.95;letter-spacing:-3px;margin:24px 0 18px}.hero-title .accent{color:var(--coral)}.lead{font-size:20px;line-height:1.55;color:#475569;max-width:610px}.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}.benefits-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}.mini{display:flex;gap:12px;align-items:center}.mini-icon{min-width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:25px}.mini strong{display:block}.mini span{font-size:13px;color:#475569}
+    .hero-card{background:white;border:8px solid white;border-radius:42px;overflow:hidden;box-shadow:var(--shadow);position:relative}.hero-photo{height:520px;background:linear-gradient(135deg,#DFF7F8,#FFEAE3,#FFF3D6);display:grid;place-items:center;text-align:center;padding:35px}.hero-photo .emoji{font-size:88px}.hero-photo h3{font-size:34px;margin:15px 0 8px}.trust-card{position:absolute;right:20px;bottom:-26px;background:white;border-radius:26px;padding:16px 20px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}.avatars{display:flex}.avatar{width:42px;height:42px;border-radius:50%;background:var(--rose);border:3px solid white;display:grid;place-items:center;font-weight:900;color:var(--coral);margin-left:-8px}.avatar:first-child{margin-left:0}.stars{color:var(--sun);font-weight:900}
+    .search-box{margin-top:-42px;position:relative;z-index:5;background:white;border-radius:30px;box-shadow:var(--shadow);padding:24px;border:1px solid #F1F5F9}.search-box h3{margin:0 0 18px;font-size:25px}.search-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.35fr .9fr;gap:13px}.field{border:1px solid var(--border);border-radius:18px;padding:12px 14px;background:white;display:flex;gap:10px;align-items:center}.field label{font-size:12px;color:var(--soft);display:block}.field select,.field input{border:0;outline:0;width:100%;font-weight:800;background:transparent;color:var(--text)}.check-field{border:1px solid var(--border);border-radius:18px;padding:12px;background:white;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#475569}.check-field strong{color:var(--text)}
+    section{padding:70px 0}.section-title{font-size:38px;margin:0 0 14px;letter-spacing:-1px}.section-sub{color:var(--soft);font-size:18px;margin:0 0 30px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px}.panel{background:white;border:1px solid #F1F5F9;border-radius:32px;padding:30px;box-shadow:0 12px 30px rgba(15,23,42,.06)}.concept-text{font-size:18px;line-height:1.6;color:#475569}.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.value{background:#fff;border-radius:26px;padding:20px;text-align:center;border:1px solid #F1F5F9}.value .circle{width:72px;height:72px;margin:0 auto 13px;border-radius:50%;display:grid;place-items:center;font-size:32px}.value h4{margin:0 0 8px}.value p{margin:0;color:#475569;font-size:14px;line-height:1.4}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.step{text-align:center}.step .num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--coral);color:white;font-weight:900;margin-bottom:-15px;position:relative;z-index:2}.step .icon{width:88px;height:88px;margin:auto;border-radius:50%;background:#E8F8FC;display:grid;place-items:center;font-size:38px}.step h4{font-size:15px}
+    .ads-section{background:linear-gradient(180deg,#fff,#E8F8FC80)}.ads-head{display:flex;justify-content:space-between;gap:20px;align-items:end}.badge{background:var(--rose);color:var(--coral);font-weight:900;border-radius:999px;padding:12px 18px}.ads-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:30px}.ad{background:white;border-radius:30px;overflow:hidden;border:1px solid #F1F5F9;box-shadow:0 14px 30px rgba(15,23,42,.08);cursor:pointer;transition:.2s}.ad:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.ad-img{height:150px;position:relative}.ad-img img{width:100%;height:100%;object-fit:cover}.aff{position:absolute;top:12px;left:12px;background:white;color:var(--coral);border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.price{position:absolute;bottom:12px;right:12px;background:#1E293Bd8;color:white;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.ad-body{padding:17px}.ad h3{font-size:20px;margin:0 0 4px}.muted{color:var(--soft)}.desc{font-size:14px;color:#475569;line-height:1.43;min-height:58px}.facts{display:grid;gap:7px;font-size:13px;color:#475569}.facts strong{color:var(--text)}.ad .btn{width:100%;margin-top:15px;padding:12px;border-radius:16px}
+    .trust{background:var(--lagoon);color:white}.trust-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.trust-item{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:22px}.trust-item h4{margin:0 0 8px;font-size:18px}.trust-item p{margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.4}.footer{background:#0f172a;color:white;padding:34px 0}.footer-grid{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer p{color:#cbd5e1;max-width:620px}.footer-links{display:flex;gap:18px;color:#e2e8f0;font-weight:800;font-size:14px}
+    .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.64);z-index:100;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.modal.open{display:flex}.modal-content{width:min(880px,96vw);max-height:90vh;overflow:auto;background:white;border-radius:30px;box-shadow:0 30px 80px rgba(0,0,0,.3)}.modal-head{position:sticky;top:0;background:white;border-bottom:1px solid var(--border);padding:22px 26px;display:flex;justify-content:space-between;align-items:center;z-index:2}.modal-head h3{margin:0;font-size:25px}.close{border:0;background:#F1F5F9;border-radius:50%;width:42px;height:42px;font-size:24px;cursor:pointer}.modal-body{padding:26px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field{display:flex;flex-direction:column;gap:7px}.form-field label{font-weight:900}.form-field input,.form-field select,.form-field textarea{border:1px solid var(--border);border-radius:16px;padding:13px;outline:0;font:inherit}.form-field textarea{min-height:110px;resize:vertical}.help{background:var(--yellow);border-radius:20px;padding:14px;color:#475569}.modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}.detail-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:24px}.detail-grid img{width:100%;height:300px;object-fit:cover;border-radius:24px}.detail-list{display:grid;gap:9px;color:#475569}.detail-list strong{color:var(--text)}.login-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.login-card{border-radius:24px;padding:22px}.blue-bg{background:#E8F8FC}.coral-bg{background:#FFEAE3}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:white;padding:14px 20px;border-radius:999px;box-shadow:var(--shadow);display:none;z-index:200;font-weight:800}.toast.show{display:block}
+    @media(max-width:980px){.nav-links{display:none}.hero-grid,.info-grid,.detail-grid,.login-grid{grid-template-columns:1fr}.search-grid{grid-template-columns:1fr 1fr}.ads-grid{grid-template-columns:repeat(2,1fr)}.value-grid,.steps,.trust-row{grid-template-columns:repeat(2,1fr)}.hero-photo{height:360px}.benefits-mini{grid-template-columns:1fr}}
+    @media(max-width:620px){.nav{height:auto;padding:14px 0;align-items:flex-start}.nav-actions{width:100%}.nav-actions .btn{flex:1;padding:12px}.search-grid,.ads-grid,.value-grid,.steps,.trust-row,.form-grid{grid-template-columns:1fr}.hero{padding-top:35px}.footer-grid{flex-direction:column;align-items:flex-start}.footer-links{flex-wrap:wrap}.section-title{font-size:30px}}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="container nav"><a class="brand" href="#"><div class="logo">🌊</div><div><h1><span>Co</span><span>-Vacances</span></h1><small>Vacances partagées entre parents solos</small></div></a><div class="nav-links"><a href="#concept">Le concept</a><a href="#annonces">Annonces</a><a href="#avantages">Avantages</a><a href="#confiance">Confiance</a></div><div class="nav-actions"><button class="btn ghost" onclick="openModal('loginModal')">Connexion</button><button class="btn secondary" onclick="openModal('loginModal')">Inscription</button></div></div></div>
+  <header class="hero"><div class="blob b1"></div><div class="blob b2"></div><div class="container hero-grid"><div><div class="pill">🤝 Solidarité • ☀️ Vacances • 💛 Confiance</div><h2 class="hero-title">Vous êtes maman solo ?<br><span class="accent">Ne partez plus seule.</span></h2><p class="lead">Rencontrez d'autres familles monoparentales, partagez un logement, réduisez les frais et offrez à vos enfants des vacances plus conviviales.</p><div class="benefits-mini"><div class="mini"><div class="mini-icon" style="background:var(--yellow)">👩‍👧‍👦</div><div><strong>Rencontrez</strong><span>d’autres parents solos</span></div></div><div class="mini"><div class="mini-icon" style="background:var(--mint)">🏡</div><div><strong>Partagez</strong><span>le logement et les frais</span></div></div><div class="mini"><div class="mini-icon" style="background:var(--rose)">💛</div><div><strong>Choisissez</strong><span>librement avec qui partir</span></div></div></div><div class="hero-actions"><button class="btn primary" onclick="openModal('searchModal')">🔎 Trouver ma co-vacancière</button><button class="btn secondary" onclick="openModal('proposeModal')">Proposer un séjour +</button></div></div><div class="hero-card"><div class="hero-photo"><div><div class="emoji">🏖️👩‍👧‍👦</div><h3>Des vacances plus simples, ensemble.</h3><p class="muted">Un espace rassurant pour partager un logement déjà réservé ou construire un projet de vacances à plusieurs.</p></div></div><div class="trust-card"><div class="avatars"><div class="avatar">J</div><div class="avatar">C</div><div class="avatar">N</div></div><div><div class="stars">★★★★★</div><small><strong>Communauté bienveillante</strong><br>profils et échanges sécurisés</small></div></div></div></div></header>
+  <main>
+    <section class="container search-box"><h3>Où et quand souhaitez-vous partir ?</h3><div class="search-grid"><div class="field"><span>📍</span><div><label>Destination</label><select id="quickDestination"><option>Toutes les régions</option><option>France</option><option>Île-de-France</option><option>Vendée</option><option>Côte d'Azur</option><option>Centre</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option></select></div></div><div class="field"><span>📅</span><div><label>Début</label><input type="date"></div></div><div class="field"><span>📅</span><div><label>Fin</label><input type="date"></div></div><label class="check-field"><input type="checkbox" checked><span><strong>Recherche intelligente</strong><br>Élargir aux destinations et dates proches</span></label><button class="btn primary" onclick="openModal('searchModal')">Rechercher</button></div></section>
+    <section id="concept"><div class="container info-grid"><div class="panel"><h2 class="section-title">C’est quoi Co‑Vacances ?</h2><p class="concept-text">Co‑Vacances permet aux familles monoparentales de partager un logement de vacances afin de réduire les coûts, créer du lien social et offrir aux enfants des compagnons de vacances. L’idée est simple : une personne publie un séjour ou un logement déjà réservé, les autres familles intéressées prennent contact, puis chacun reste libre de choisir avec qui partir.</p></div><div class="panel" id="avantages"><h2 class="section-title">Les avantages</h2><div class="value-grid"><div class="value"><div class="circle" style="background:var(--rose)">💰</div><h4>Économiser</h4><p>Partager le prix du logement.</p></div><div class="value"><div class="circle" style="background:var(--mint)">👥</div><h4>Créer du lien</h4><p>Rencontrer des familles similaires.</p></div><div class="value"><div class="circle" style="background:var(--yellow)">👧</div><h4>Enfants heureux</h4><p>Des copains pendant les vacances.</p></div><div class="value"><div class="circle" style="background:var(--lav)">🛡️</div><h4>Libre choix</h4><p>Aucune obligation d’accepter.</p></div></div></div></div></section>
+    <section><div class="container"><h2 class="section-title">Comment ça marche ?</h2><p class="section-sub">Un parcours volontairement simple pour une première version MVP.</p><div class="steps"><div class="step"><div class="num">1</div><div class="icon">👤</div><h4>Je crée mon profil</h4></div><div class="step"><div class="num">2</div><div class="icon">🏡</div><h4>Je cherche ou publie un séjour</h4></div><div class="step"><div class="num">3</div><div class="icon">💬</div><h4>J’échange en privé</h4></div><div class="step"><div class="num">4</div><div class="icon">🌴</div><h4>Nous partons ensemble</h4></div></div></div></section>
+    <section id="annonces" class="ads-section"><div class="container"><div class="ads-head"><div><h2 class="section-title">Annonces proposées</h2><p class="section-sub">Des séjours fictifs pour tester le parcours utilisateur et le maquettage.</p></div><span class="badge">💕 Affinités & confiance</span></div><div class="ads-grid" id="adsGrid"></div></div></section>
+    <section id="confiance" class="trust"><div class="container"><h2 class="section-title">Un cadre rassurant pour échanger</h2><div class="trust-row"><div class="trust-item"><h4>🛡️ Profils vérifiés</h4><p>Un espace pensé pour rassurer avant tout contact.</p></div><div class="trust-item"><h4>💬 Messagerie privée</h4><p>L’adresse email reste masquée dans le prototype.</p></div><div class="trust-item"><h4>💛 Bienveillance</h4><p>Une communauté centrée sur l’entraide entre parents solos.</p></div><div class="trust-item"><h4>🔒 Liberté de choix</h4><p>Publier une annonce n’oblige jamais à accepter une proposition.</p></div></div></div></section>
+  </main>
+  <footer class="footer"><div class="container footer-grid"><div><h2>☀️ Co‑Vacances</h2><p>Des vacances plus simples, plus économiques et plus conviviales pour les familles monoparentales.</p></div><div class="footer-links"><a href="#">Contact</a><a href="#">Confidentialité</a><a href="#">Conditions</a></div></div></footer>
 
-const COLORS = {
-  navy: "#17324D",
-  blue: "#0B63CE",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+  <div id="loginModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>Connexion à Co‑Vacances</h3><button class="close" onclick="closeModal('loginModal')">×</button></div><div class="modal-body login-grid"><div class="login-card blue-bg"><h3>J’ai déjà un compte</h3><div class="form-field"><label>Email ou login</label><input placeholder="exemple@email.com"></div><br><div class="form-field"><label>Mot de passe</label><input type="password" placeholder="••••••••"></div><br><button class="btn primary" onclick="showToast('Connexion simulée pour le prototype')">Se connecter</button></div><div class="login-card coral-bg"><h3>Première connexion ?</h3><p class="muted">Créez un compte pour publier une annonce, contacter une co‑vacancière ou sauvegarder vos recherches.</p><div class="form-field"><label>Pseudo</label><input id="pseudoInput" value="Marie75"></div><br><div class="form-field"><label>Email</label><input placeholder="votre@email.com"></div><br><button class="btn secondary" onclick="showToast('Compte créé dans le prototype')">Créer mon compte</button></div></div></div></div>
+  <div id="searchModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🔎 Trouver ma co‑vacancière</h3><button class="close" onclick="closeModal('searchModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label>Destination</label><select><option>France</option><option>Île-de-France</option><option>Vendée</option><option>Côte d'Azur</option><option>Centre</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option></select></div><div class="form-field"><label>Budget maximum</label><select><option>Peu importe</option><option>Moins de 300 €</option><option>300 € - 500 €</option><option>500 € - 800 €</option></select></div><div class="form-field"><label>Date de début</label><input type="date"></div><div class="form-field"><label>Date de fin</label><input type="date"></div></div><label class="check-field" style="margin-top:16px"><input type="checkbox" checked><span><strong>Recherche intelligente</strong><br>Étendre la sélection de résultats aux destinations proches, dates voisines et profils compatibles.</span></label><div class="modal-actions"><button class="btn ghost" onclick="closeModal('searchModal')">Quitter</button><button class="btn primary" onclick="showToast('Recherche lancée dans le prototype')">Lancer la recherche</button></div></div></div></div>
+  <div id="proposeModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🏡 Proposer un séjour</h3><button class="close" onclick="closeModal('proposeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label>Lien du lieu</label><input placeholder="Lien Airbnb, Booking, camping..."></div><div class="form-field"><label>Région / destination</label><select><option>Vendée</option><option>Côte d'Azur</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option><option>Autre</option></select></div><div class="form-field"><label>Qui sera présent ?</label><select><option>Moi et mes enfants</option><option>Moi uniquement</option><option>Moi, mes enfants et un proche</option></select></div><div class="form-field"><label>Nombre + âge des enfants</label><input placeholder="Ex : 2 enfants, 7 et 10 ans"></div><div class="form-field"><label>Places restantes</label><select><option>1 adulte</option><option>1 adulte + 1 enfant</option><option>1 adulte + 2 enfants</option><option>À discuter</option></select></div><div class="form-field"><label>Prix proposé</label><input type="number" placeholder="Ex : 450"></div><div class="form-field" style="grid-column:1/-1"><label>Description / conditions d’hébergement</label><textarea placeholder="Nombre de lits, chambres, ambiance recherchée, organisation..."></textarea></div></div><p class="help"><strong>Important :</strong> la publication de votre annonce ne vous oblige pas à accepter les propositions. Vous êtes libre de choisir qui vient avec vous, non mais !</p><div class="modal-actions"><button class="btn ghost" onclick="closeModal('proposeModal')">Quitter</button><button class="btn secondary" onclick="publierAnnonce()">Publier</button></div></div></div></div>
+  <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body"><div class="detail-grid"><img id="detailImage" src="" alt=""><div><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="concept-text"></p><div class="detail-list" id="detailFacts"></div><div class="modal-actions"><button class="btn secondary" onclick="openMessage('interest')">Ça m’intéresse !</button><button class="btn ghost" onclick="openMessage('question')">Poser une question</button></div></div></div></div></div></div>
+  <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
+  <div id="toast" class="toast"></div>
 
-const initialRows = [
-  {
-    id: 1,
-    contract: "C-2023-001",
-    loco: "37501",
-    wo: "WO-45872",
-    hmStatus: "Planifiée",
-    hmStatusColor: "red",
-    hmStart: "01/06/2024",
-    hmEnd: "15/06/2024",
-    billable: "OUI",
-    replacement: "37505",
-    nonBilling: "–",
-    nintex: "15/06/2024",
-    lineStatus: "En cours de traitement ADV",
-    invoice: "FAC-2024-0156",
-    credit: "–",
-  },
-  {
-    id: 2,
-    contract: "C-2023-002",
-    loco: "37512",
-    wo: "WO-46001",
-    hmStatus: "Commencée",
-    hmStatusColor: "orange",
-    hmStart: "05/06/2024",
-    hmEnd: "20/06/2024",
-    billable: "OUI",
-    replacement: "37520",
-    nonBilling: "–",
-    nintex: "18/06/2024",
-    lineStatus: "Attente validation APE",
-    invoice: "–",
-    credit: "–",
-  },
-  {
-    id: 3,
-    contract: "C-2023-003",
-    loco: "37508",
-    wo: "WO-45781",
-    hmStatus: "Terminée",
-    hmStatusColor: "green",
-    hmStart: "20/05/2024",
-    hmEnd: "28/05/2024",
-    billable: "OUI",
-    replacement: "37509",
-    nonBilling: "–",
-    nintex: "27/05/2024",
-    lineStatus: "Clôturé",
-    invoice: "FAC-2024-0132",
-    credit: "–",
-  },
-  {
-    id: 4,
-    contract: "C-2023-004",
-    loco: "37515",
-    wo: "WO-46100",
-    hmStatus: "Planifiée",
-    hmStatusColor: "red",
-    hmStart: "10/06/2024",
-    hmEnd: "25/06/2024",
-    billable: "NON",
-    replacement: "–",
-    nonBilling: "10/06/2024 – 25/06/2024",
-    nintex: "–",
-    lineStatus: "À valider CCM",
-    invoice: "–",
-    credit: "–",
-  },
-  {
-    id: 5,
-    contract: "C-2023-005",
-    loco: "37503",
-    wo: "WO-45912",
-    hmStatus: "Terminée",
-    hmStatusColor: "green",
-    hmStart: "01/05/2024",
-    hmEnd: "07/05/2024",
-    billable: "OUI",
-    replacement: "37504",
-    nonBilling: "–",
-    nintex: "07/05/2024",
-    lineStatus: "Clôturé",
-    invoice: "FAC-2024-0108",
-    credit: "AVO-2024-0031",
-  },
-  {
-    id: 6,
-    contract: "C-2023-006",
-    loco: "37518",
-    wo: "WO-46220",
-    hmStatus: "Commencée",
-    hmStatusColor: "orange",
-    hmStart: "12/06/2024",
-    hmEnd: "30/06/2024",
-    billable: "NON",
-    replacement: "–",
-    nonBilling: "12/06/2024 – 30/06/2024",
-    nintex: "–",
-    lineStatus: "En cours de traitement ADV",
-    invoice: "–",
-    credit: "–",
-  },
-];
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co";
 
-const lineStatuses = [
-  "En cours de traitement ADV",
-  "Attente validation APE",
-  "À valider CCM",
-  "Clôturé",
-];
+const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+console.log("window.supabase =", window.supabase);
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const ads = [
+      {id:1,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',age:'Julie, 39 ans',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août',link:'https://www.exemple-location-vendee.fr',home:'Maison 3 chambres, 4 lits, jardin clos.'},
+      {id:2,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',age:'Camille, 34 ans',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet',link:'Non renseigné',home:'Appartement proche plage, canapé-lit disponible.'},
+      {id:3,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',region:'Annecy et environ',lieu:'Lac d’Annecy',pseudo:'NinaMontagne',age:'Nina, 42 ans',aff:'84%',desc:'Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 6 et 12 ans',places:'1 adulte + 2 enfants max',price:'390 €',dates:'20 - 27 juillet',link:'https://www.exemple-chalet-annecy.fr',home:'Chalet familial, chambres séparées, terrasse.'},
+      {id:4,img:'https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80',region:'Bordeaux et environ',lieu:'Bassin d’Arcachon',pseudo:'SosoOcean',age:'Sophie, 37 ans',aff:'91%',desc:'Maison proche océan, vélo, marché local et rythme tranquille avec les enfants.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 9 ans',places:'1 adulte + 2 enfants',price:'480 €',dates:'3 - 10 août',link:'Non renseigné',home:'Maison 2 chambres + mezzanine enfants.'},
+      {id:5,img:'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80',region:'Pyrénées-Orientales',lieu:'Collioure',pseudo:'MamanSoleil66',age:'Amina, 41 ans',aff:'87%',desc:'Mer, petites visites et soirées calmes. Recherche famille respectueuse et positive.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 5 et 11 ans',places:'1 adulte + 1 enfant',price:'430 €',dates:'12 - 19 août',link:'https://www.exemple-collioure.fr',home:'Appartement avec terrasse, 3 couchages disponibles.'},
+      {id:6,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Centre',lieu:'Sologne',pseudo:'ClaireNature',age:'Claire, 44 ans',aff:'82%',desc:'Vacances au calme : nature, jeux extérieurs, barbecue et visites de châteaux.',adults:'1 adulte déjà inscrit',kids:'3 enfants : 6, 8 et 13 ans',places:'1 adulte + 2 enfants',price:'300 €',dates:'5 - 12 juillet',link:'Non renseigné',home:'Gîte familial, grand jardin, lits simples enfants.'},
+      {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
+      {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
+    ];
+/*
+async function loadAdsFromSupabase() {
+
+  const { data, error } = await supabase
+    .from('annonces')
+    .select('*');
+
+  if (error) {
+    onsole.error(error);
+    return;
+  }
+
+console.log("Annonces Supabase :", data);
 }
+*/
 
-function SidebarItem({ icon: Icon, label, active }) {
-  return (
-    <div className={classNames("flex items-center gap-3 px-5 py-4 text-sm transition", active ? "bg-blue-700 text-white" : "text-slate-200 hover:bg-white/10")}>
-      <Icon size={18} />
-      <span>{label}</span>
-    </div>
-  );
-}
+    let selected=null;
+    function renderAds(){document.getElementById('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><img src="${a.img}" alt="${a.region}"><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p><p><strong>Prix :</strong> ${a.price}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
+    function openModal(id){document.getElementById(id).classList.add('open')} function closeModal(id){document.getElementById(id).classList.remove('open')} 
+    function openDetail(id){selected=ads.find(a=>a.id===id);document.getElementById('detailTitle').textContent='Annonce de '+selected.pseudo;document.getElementById('detailImage').src=selected.img;document.getElementById('detailAff').textContent='💕 '+selected.aff+' d’affinités';document.getElementById('detailPlace').textContent=selected.lieu+' — '+selected.region;document.getElementById('detailDesc').textContent=selected.desc;document.getElementById('detailFacts').innerHTML=`<p><strong>Lien du lieu :</strong> ${selected.link}</p><p><strong>Participants déjà enregistrés :</strong> ${selected.adults}</p><p><strong>Nombre d’enfant et âge :</strong> ${selected.kids}</p><p><strong>Places restantes :</strong> ${selected.places}</p><p><strong>Conditions d’hébergement :</strong> ${selected.home}</p><p><strong>Prix / participation :</strong> ${selected.price}</p><p><strong>Dates proposées :</strong> ${selected.dates}</p>`;openModal('detailModal')}
+    function openMessage(mode){const pseudo=document.getElementById('pseudoInput')?.value||'Marie75';closeModal('detailModal');document.getElementById('messageTitle').textContent=mode==='interest'?'Prendre contact avec la co-vacancière':'Poser une question';document.getElementById('messageSubject').value=mode==='interest'?`${pseudo} est intéressée pour vous accompagner en vacances !`:`${pseudo} veut vous poser une question`;document.getElementById('messageBody').value=mode==='interest'?`Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`:`Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;openModal('messageModal')}
+    function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+async function publierAnnonce() {
 
-function SelectBox({ label, placeholder }) {
-  return (
-    <label className="flex flex-col gap-2 text-sm font-semibold text-slate-800">
-      {label}
-      <div className="flex h-11 items-center justify-between rounded-lg border border-slate-300 bg-white px-3 text-sm font-normal text-slate-400 shadow-sm">
-        <span>{placeholder}</span>
-        <ChevronDown size={16} className="text-slate-500" />
-      </div>
-    </label>
-  );
-}
+  const nouvelleAnnonce = {
 
-function DateBox({ label }) {
-  return (
-    <label className="flex flex-col gap-2 text-sm font-semibold text-slate-800">
-      {label}
-      <div className="flex h-11 items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-normal text-slate-400 shadow-sm">
-        <Calendar size={16} className="text-slate-600" />
-        <span>JJ/MM/AAAA</span>
-      </div>
-    </label>
-  );
-}
+    lien: document.getElementById("annonceLien").value,
 
-function QuickFilter({ icon: Icon, label, count, tone }) {
-  const tones = {
-    amber: "border-amber-200 bg-amber-50 text-amber-600",
-    blue: "border-blue-200 bg-blue-50 text-blue-600",
-    green: "border-emerald-200 bg-emerald-50 text-emerald-600",
-    purple: "border-violet-200 bg-violet-50 text-violet-600",
+    region: document.getElementById("annonceRegion").value,
+
+    participants: document.getElementById("annonceParticipants").value,
+
+    enfants: document.getElementById("annonceEnfants").value,
+
+    places: document.getElementById("annoncePlaces").value,
+
+    prix: document.getElementById("annoncePrix").value,
+
+    description: document.getElementById("annonceDescription").value
+
   };
-  const badges = {
-    amber: "bg-amber-400 text-white",
-    blue: "bg-blue-600 text-white",
-    green: "bg-emerald-600 text-white",
-    purple: "bg-violet-600 text-white",
-  };
-  return (
-    <button className={classNames("flex h-16 items-center justify-between rounded-lg border px-5 text-left shadow-sm", tones[tone])}>
-      <div className="flex items-center gap-4">
-        <Icon size={23} />
-        <span className="font-semibold text-slate-700">{label}</span>
-      </div>
-      <span className={classNames("rounded-full px-2.5 py-1 text-xs font-bold", badges[tone])}>{count}</span>
-    </button>
-  );
+
+  const { data, error } = await db
+    .from("annonces")
+    .insert([nouvelleAnnonce]);
+
+  if (error) {
+
+    console.error(error);
+
+    showToast("Erreur lors de la publication");
+
+    return;
+  }
+
+  showToast("Annonce publiée ✅");
+
+  closeModal("proposeModal");
+
 }
-
-function HmBadge({ status, color }) {
-  const cls = {
-    red: "bg-rose-50 text-rose-600",
-    orange: "bg-orange-50 text-orange-600",
-    green: "bg-emerald-50 text-emerald-700",
-  };
-  return <span className={classNames("rounded-md px-2 py-1 text-xs font-semibold", cls[color])}>{status}</span>;
-}
-
-function LineStatusSelect({ value, onChange }) {
-  const tone = {
-    "En cours de traitement ADV": "border-blue-200 bg-blue-50 text-blue-700",
-    "Attente validation APE": "border-amber-200 bg-amber-50 text-amber-700",
-    "À valider CCM": "border-violet-200 bg-violet-50 text-violet-700",
-    "Clôturé": "border-emerald-200 bg-emerald-50 text-emerald-700",
-  };
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={classNames("w-full rounded-md border px-2 py-2 text-xs font-semibold outline-none", tone[value])}
-    >
-      {lineStatuses.map((status) => (
-        <option key={status} value={status}>{status}</option>
-      ))}
-    </select>
-  );
-}
-
-function EditableRef({ value, onChange, placeholder }) {
-  return (
-    <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-2 shadow-sm">
-      <input
-        value={value === "–" ? "" : value}
-        onChange={(e) => onChange(e.target.value || "–")}
-        placeholder={placeholder}
-        className="w-full min-w-0 text-xs text-slate-700 outline-none placeholder:text-slate-400"
-      />
-      <Pencil size={14} className="shrink-0 text-slate-500" />
-    </div>
-  );
-}
-
-function EditModal({ row, onClose, onSave }) {
-  const [replacement, setReplacement] = useState(true);
-  const [treatment, setTreatment] = useState("Facturable");
-  const [replacementLoco, setReplacementLoco] = useState(row.replacement !== "–" ? row.replacement : "");
-  const [nonBillingStart, setNonBillingStart] = useState("10/06/2024");
-  const [nonBillingEnd, setNonBillingEnd] = useState("25/06/2024");
-  const [nintex, setNintex] = useState(row.nintex !== "–");
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/55 px-6 py-4 backdrop-blur-sm">
-      <div className="max-h-[95vh] w-full max-w-5xl overflow-auto rounded-lg bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-200 px-7 py-5">
-          <h2 className="text-2xl font-bold text-slate-900">La loc est entrée/ sortie d'atelier</h2>
-          <button onClick={onClose} className="rounded-full p-1 text-slate-500 hover:bg-slate-100"><X size={24} /></button>
-        </div>
-
-        <div className="px-7 py-5">
-          <div className="rounded-lg border border-slate-200 p-5">
-            <div className="grid grid-cols-3 gap-x-12 gap-y-6">
-              <Info label="N° WO"><a className="inline-flex items-center gap-2 font-semibold text-blue-600 underline" href="#">{row.wo}<ExternalLink size={16} /></a></Info>
-              <Info label="N° loco">{row.loco}</Info>
-              <Info label="Type de WO"><span className="inline-flex items-center gap-2"><Wrench size={18} className="text-rose-500" />Heavy maintenance</span></Info>
-              <Info label="Date début"><span className="inline-flex items-center gap-4">{row.hmStart}<Calendar size={17} className="text-slate-600" /></span></Info>
-              <Info label="Date fin"><span className="inline-flex items-center gap-4">{row.hmEnd}<Calendar size={17} className="text-slate-600" /></span></Info>
-              <Info label="Statut"><HmBadge status={row.hmStatus} color={row.hmStatusColor} /></Info>
-            </div>
-          </div>
-
-          <div className="mt-4 border-y border-slate-200 py-5">
-            <h3 className="mb-4 font-bold text-slate-900">La loco {row.loco} a-t-elle été remplacée ?</h3>
-            <div className="flex gap-16">
-              <Check value={replacement} onChange={() => setReplacement(true)} label="Oui" />
-              <Check value={!replacement} onChange={() => setReplacement(false)} label="Non" />
-            </div>
-            {replacement && (
-              <label className="mt-4 block max-w-md text-sm font-semibold text-slate-600">
-                N° loco de remplacement <span className="text-rose-500">*</span>
-                <input value={replacementLoco} onChange={(e) => setReplacementLoco(e.target.value)} className="mt-2 h-11 w-full rounded-md border border-slate-300 px-3 text-sm outline-none focus:border-blue-500" />
-              </label>
-            )}
-          </div>
-
-          <div className="py-5">
-            <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-900">Choix de traitement <span className="grid h-4 w-4 place-items-center rounded-full border border-slate-500 text-[10px] text-slate-500">i</span></h3>
-            <div className="grid grid-cols-3 gap-5">
-              <TreatmentCard title="Facturable" desc="La période est facturable." selected={treatment === "Facturable"} color="emerald" onClick={() => setTreatment("Facturable")} />
-              <TreatmentCard title="Non facturable" desc="La période ne doit pas être facturée." selected={treatment === "Non facturable"} color="orange" onClick={() => setTreatment("Non facturable")} />
-              <TreatmentCard title="A traiter dans NINTEX" desc="Cette ligne doit être traitée dans NINTEX." selected={treatment === "Nintex"} color="violet" onClick={() => setTreatment("Nintex")} />
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-slate-200 p-5">
-            <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-900">Périodes de non facturation <span className="grid h-4 w-4 place-items-center rounded-full border border-slate-500 text-[10px] text-slate-500">i</span></h3>
-            <div className="grid grid-cols-[1fr_20px_1fr_210px] items-end gap-4">
-              <DateInput label="Date début" value={nonBillingStart} onChange={setNonBillingStart} />
-              <span className="pb-3 text-center text-slate-500">-</span>
-              <DateInput label="Date fin" value={nonBillingEnd} onChange={setNonBillingEnd} />
-              <button className="mb-0 h-11 rounded-md border border-blue-500 px-4 font-semibold text-blue-600"><Plus className="mr-2 inline" size={16} />Ajouter une période</button>
-            </div>
-            <div className="my-4 flex items-center gap-4 text-sm font-semibold text-slate-400"><div className="h-px flex-1 bg-slate-200" />OU<div className="h-px flex-1 bg-slate-200" /></div>
-            <Check value={nintex} onChange={() => setNintex(!nintex)} label="A traiter dans NINTEX" bold />
-            <p className="ml-8 mt-1 text-xs text-slate-500">Cocher cette case si la ligne doit être envoyée dans NINTEX.</p>
-            <label className="mt-5 block text-sm font-semibold text-slate-700">
-              Commentaire (optionnel)
-              <textarea className="mt-2 h-16 w-full resize-none rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500" placeholder="Saisir un commentaire..." />
-            </label>
-          </div>
-        </div>
-
-        <div className="sticky bottom-0 flex items-center justify-end gap-4 border-t border-slate-200 bg-white px-7 py-5">
-          <button className="rounded-md border border-blue-500 px-5 py-3 text-sm font-semibold text-blue-600">APE ne valide pas les dates de HM</button>
-          <button className="rounded-md border border-blue-500 px-5 py-3 text-sm font-semibold text-blue-600">APE valide les dates de HM</button>
-          <button onClick={onClose} className="rounded-md border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700">Annuler</button>
-          <button onClick={() => onSave({ ...row, replacement: replacement ? replacementLoco : "–", nintex: nintex ? row.nintex : "–" })} className="rounded-md bg-blue-700 px-7 py-3 text-sm font-semibold text-white shadow">Enregistrer</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Info({ label, children }) {
-  return <div><div className="mb-2 text-sm font-bold text-slate-700">{label}</div><div className="text-base text-slate-800">{children}</div></div>;
-}
-
-function Check({ value, onChange, label, bold }) {
-  return (
-    <label className={classNames("flex cursor-pointer items-center gap-3 text-slate-700", bold && "font-bold")}>
-      <input type="checkbox" checked={value} onChange={onChange} className="h-5 w-5 rounded border-slate-300 accent-blue-600" />
-      {label}
-    </label>
-  );
-}
-
-function TreatmentCard({ title, desc, selected, color, onClick }) {
-  const cls = {
-    emerald: selected ? "border-emerald-400 bg-emerald-50" : "border-emerald-200 bg-white",
-    orange: selected ? "border-orange-400 bg-orange-50" : "border-orange-200 bg-white",
-    violet: selected ? "border-violet-400 bg-violet-50" : "border-violet-200 bg-white",
-  };
-  const ring = { emerald: "border-emerald-500", orange: "border-orange-400", violet: "border-violet-500" };
-  return (
-    <button onClick={onClick} className={classNames("rounded-lg border p-5 text-left transition hover:shadow-md", cls[color])}>
-      <div className="flex items-center gap-3 font-bold text-slate-800">
-        <span className={classNames("h-5 w-5 rounded-full border-2", ring[color], selected && "bg-current/10")} />
-        {title}
-      </div>
-      <p className="ml-8 mt-3 text-sm text-slate-500">{desc}</p>
-    </button>
-  );
-}
-
-function DateInput({ label, value, onChange }) {
-  return (
-    <label className="text-sm font-semibold text-slate-700">
-      {label}
-      <div className="mt-2 flex h-11 items-center rounded-md border border-slate-300 px-3">
-        <input value={value} onChange={(e) => onChange(e.target.value)} className="w-full outline-none" />
-        <Calendar size={16} className="text-slate-500" />
-      </div>
-    </label>
-  );
-}
-
-export default function FacturationCCMPrototype() {
-  const [rows, setRows] = useState(initialRows);
-  const [selected, setSelected] = useState(null);
-  const [query, setQuery] = useState("");
-
-  const filteredRows = useMemo(() => {
-    const q = query.toLowerCase();
-    if (!q) return rows;
-    return rows.filter((r) => Object.values(r).some((v) => String(v).toLowerCase().includes(q)));
-  }, [query, rows]);
-
-  const updateRow = (id, patch) => setRows((current) => current.map((row) => row.id === id ? { ...row, ...patch } : row));
-
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <aside className="fixed left-0 top-0 flex h-screen w-56 flex-col bg-[#17324D] text-white shadow-xl">
-        <div className="flex h-16 items-center gap-3 px-5 text-2xl font-bold"><TrainFront /> CCM</div>
-        <nav className="mt-2 flex-1">
-          <SidebarItem icon={Home} label="Tableau de bord" />
-          <SidebarItem icon={FileText} label="Facturation CCM" active />
-          <SidebarItem icon={ReceiptText} label="Contrats" />
-          <SidebarItem icon={Truck} label="Locomotives" />
-          <SidebarItem icon={FileText} label="Factures & Avoirs" />
-          <SidebarItem icon={BarChart3} label="Rapports" />
-          <SidebarItem icon={Settings} label="Paramètres" />
-        </nav>
-        <SidebarItem icon={LogOut} label="Déconnexion" />
-      </aside>
-
-      <main className="ml-56 p-7">
-        <header className="mb-5 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-slate-900">Facturation CCM</h1>
-          <button className="flex items-center gap-2 rounded-full border bg-white px-3 py-2 text-sm shadow-sm">Utilisateur CCM <ChevronDown size={14} /></button>
-        </header>
-
-        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="grid grid-cols-5 gap-5">
-            <SelectBox label="Client" placeholder="Sélectionner un client" />
-            <SelectBox label="Contrat" placeholder="Sélectionner un contrat" />
-            <SelectBox label="Locomotive" placeholder="Sélectionner une locomotive" />
-            <DateBox label="Date début facturation" />
-            <DateBox label="Date fin facturation" />
-          </div>
-          <div className="mt-5 flex h-11 items-center gap-3 rounded-lg border border-slate-300 bg-white px-3 shadow-sm">
-            <Search size={18} className="text-slate-500" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} className="w-full text-sm outline-none placeholder:text-slate-400" placeholder="Rechercher par mot clé, n° de facture ou n° d'avoir..." />
-          </div>
-        </section>
-
-        <section className="mt-7">
-          <h2 className="mb-3 font-bold">Filtres rapides</h2>
-          <div className="grid grid-cols-4 gap-6">
-            <QuickFilter icon={Hourglass} label="Attente action CCM" count="12" tone="amber" />
-            <QuickFilter icon={ClipboardCheck} label="Données à valider APE" count="8" tone="blue" />
-            <QuickFilter icon={CheckCircle2} label="Lignes traitées" count="245" tone="green" />
-            <QuickFilter icon={FileText} label="A traiter dans Nintex" count="15" tone="purple" />
-          </div>
-        </section>
-
-        <section className="mt-7 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-          <table className="w-full table-fixed border-collapse text-sm">
-            <thead className="bg-slate-50 text-slate-800">
-              <tr>
-                <Th>Contrat</Th><Th>Locomotive</Th><Th>WO</Th><Th wide>Immobilisation</Th><Th>Facturable</Th><Th>Loc remplacée</Th><Th wide>Date de non facturation<br/><span className="text-xs font-normal text-slate-500">début – fin</span></Th><Th>A traiter<br/>dans Nintex</Th><Th wide>Statut de la ligne</Th><Th>N° de facture</Th><Th>N° d'avoir</Th><Th>Actions</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRows.map((row) => (
-                <tr key={row.id} className="border-t border-slate-100 hover:bg-slate-50/70">
-                  <Td>{row.contract}</Td>
-                  <Td>{row.loco}</Td>
-                  <Td>{row.wo}</Td>
-                  <Td wide>
-                    <div className="flex items-start gap-2"><Wrench size={16} className="mt-1 text-rose-500" /><div><div className="font-bold text-slate-800">Heavy maintenance</div><HmBadge status={row.hmStatus} color={row.hmStatusColor} /><div className="mt-2 text-xs text-slate-600">{row.hmStart} – {row.hmEnd}</div></div></div>
-                  </Td>
-                  <Td><span className={classNames("rounded-md px-3 py-2 text-xs font-bold", row.billable === "OUI" ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700")}>{row.billable}</span></Td>
-                  <Td>{row.replacement}</Td>
-                  <Td wide>{row.nonBilling}</Td>
-                  <Td>{row.nintex}</Td>
-                  <Td wide><LineStatusSelect value={row.lineStatus} onChange={(lineStatus) => updateRow(row.id, { lineStatus })} /></Td>
-                  <Td><EditableRef value={row.invoice} placeholder="FAC-..." onChange={(invoice) => updateRow(row.id, { invoice })} /></Td>
-                  <Td><EditableRef value={row.credit} placeholder="AVO-..." onChange={(credit) => updateRow(row.id, { credit })} /></Td>
-                  <Td><button onClick={() => setSelected(row)} className="rounded-md border border-blue-500 px-3 py-2 text-xs font-semibold text-blue-600">Actions <ChevronDown size={14} className="inline" /></button></Td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="flex items-center justify-between border-t border-slate-100 px-5 py-5 text-sm text-slate-500">
-            <span>Affichage 1 à 10 sur 156 lignes</span>
-            <div className="flex items-center gap-2">
-              {["‹", "1", "2", "3", "4", "5", "...", "16", "›"].map((p) => <button key={p} className={classNames("h-9 min-w-9 rounded-md border px-3", p === "1" ? "border-blue-400 bg-blue-50 text-blue-700" : "border-slate-200 bg-white")}>{p}</button>)}
-            </div>
-            <span className="rounded-md border bg-white px-3 py-2">10 <ChevronDown size={14} className="inline" /> lignes par page</span>
-          </div>
-        </section>
-      </main>
-
-      {selected && <EditModal row={selected} onClose={() => setSelected(null)} onSave={(updated) => { updateRow(updated.id, updated); setSelected(null); }} />}
-    </div>
-  );
-}
-
-function Th({ children, wide }) { return <th className={classNames("border-r border-slate-100 px-3 py-4 text-center text-xs font-bold", wide ? "w-44" : "w-28")}>{children}</th>; }
-function Td({ children, wide }) { return <td className={classNames("border-r border-slate-100 px-3 py-4 text-center align-middle text-slate-700", wide ? "w-44" : "w-28")}>{children}</td>; }
+renderAds();
+  </script>
+</body>
+</html>
