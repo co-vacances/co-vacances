@@ -285,12 +285,372 @@
 
   <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
 
-  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  ...
-  chargerAnnonces();
+const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co";
+const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80";
+
+let annonces = [];
+let selected = null;
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
+}
+
+window.openModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.add("open");
+  }
+};
+
+window.closeModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.classList.remove("open");
+  }
+};
+
+function formatPrice(value) {
+  if (value === null || value === undefined || value === "") {
+    return "Prix à préciser";
+  }
+
+  return value + " €";
+}
+
+function formatDates(dateDebut, dateFin) {
+  if (!dateDebut && !dateFin) {
+    return "Dates à préciser";
+  }
+
+  if (dateDebut && dateFin) {
+    return dateDebut + " → " + dateFin;
+  }
+
+  return dateDebut || dateFin;
+}
+
+function normalizeAnnonce(row) {
+  return {
+    id: row.id,
+    img: DEFAULT_IMAGE,
+    region: row["région"] || row.region || "Région à préciser",
+    ville: row.ville || "Lieu à préciser",
+    pseudo: row.auteur || "Parent solo",
+    aff: "Nouveau",
+    desc: row.description || "Description à compléter.",
+    adults: row.participants_valides
+      ? row.participants_valides + " participant(s) déjà prévu(s)"
+      : "Participants à préciser",
+    kids: row.enfants || "Enfants à préciser",
+    places: row.places_restantes
+      ? row.places_restantes + " place(s) restante(s)"
+      : "Places à préciser",
+    price: formatPrice(row.prix),
+    dates: formatDates(row.date_debut, row.date_fin),
+    link: row.lien_hebergement || row.lien || "Non renseigné",
+    home: row.description || "Conditions à préciser."
+  };
+}
+
+function renderAds(liste = annonces) {
+  const grid = document.getElementById("adsGrid");
+
+  if (!grid) {
+    return;
+  }
+
+  if (!liste.length) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;background:white;border:1px dashed var(--border);border-radius:28px;padding:34px;text-align:center;color:#64748B">
+        Aucune annonce trouvée pour le moment.
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = liste.map(a => `
+    <article class="ad" onclick="openDetail(${a.id})">
+      <div class="ad-img">
+        <img src="${a.img}" alt="${a.region}">
+        <span class="aff">💕 ${a.aff}</span>
+        <span class="price">${a.price}</span>
+      </div>
+
+      <div class="ad-body">
+        <h3>${a.ville}</h3>
+        <p class="muted">📍 ${a.region} • 📅 ${a.dates}</p>
+        <p class="desc">${a.desc}</p>
+
+        <div class="facts">
+          <p><strong>Participants :</strong> ${a.adults}</p>
+          <p><strong>Enfants :</strong> ${a.kids}</p>
+          <p><strong>Places restantes :</strong> ${a.places}</p>
+          <p><strong>Prix :</strong> ${a.price}</p>
+        </div>
+
+        <button class="btn primary">Voir le séjour</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+async function chargerAnnonces() {
+  const { data, error } = await db
+    .from("annonces")
+    .select("*");
+
+  if (error) {
+    console.error("Erreur chargement annonces :", error);
+    showToast("Impossible de charger les annonces");
+    return;
+  }
+
+  annonces = (data || []).map(normalizeAnnonce);
+
+  annonces.sort((a, b) => {
+    return Number(b.id || 0) - Number(a.id || 0);
+  });
+
+  renderAds();
+}
+
+window.publierAnnonce = async function() {
+  const lien = document.getElementById("annonceLien").value;
+  const region = document.getElementById("annonceRegion").value;
+  const ville = document.getElementById("annonceVille").value;
+  const auteur = document.getElementById("annonceAuteur").value || document.getElementById("pseudoInput")?.value || "Marie75";
+  const dateDebut = document.getElementById("annonceDateDebut").value;
+  const dateFin = document.getElementById("annonceDateFin").value;
+  const participants = document.getElementById("annonceParticipants").value;
+  const enfants = document.getElementById("annonceEnfants").value;
+  const places = document.getElementById("annoncePlaces").value;
+  const prix = document.getElementById("annoncePrix").value;
+  const description = document.getElementById("annonceDescription").value;
+
+  if (!region || !ville || !description) {
+    showToast("Merci de renseigner au minimum la région, la ville et la description");
+    return;
+  }
+
+  const nouvelleAnnonce = {
+    lien_hebergement: lien || null,
+    "région": region || null,
+    ville: ville || null,
+    date_debut: dateDebut || null,
+    date_fin: dateFin || null,
+    participants_valides: participants ? parseInt(participants, 10) : null,
+    enfants: enfants || null,
+    places_restantes: places ? parseInt(places, 10) : null,
+    prix: prix ? parseInt(prix, 10) : null,
+    description: description || null,
+    auteur: auteur || null
+  };
+
+  const { data, error } = await db
+    .from("annonces")
+    .insert([nouvelleAnnonce])
+    .select();
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+    showToast("Erreur lors de la publication : " + error.message);
+    return;
+  }
+
+  showToast("Annonce publiée ✅");
+  closeModal("proposeModal");
+
+  document.getElementById("annonceLien").value = "";
+  document.getElementById("annonceVille").value = "";
+  document.getElementById("annonceAuteur").value = "";
+  document.getElementById("annonceDateDebut").value = "";
+  document.getElementById("annonceDateFin").value = "";
+  document.getElementById("annonceEnfants").value = "";
+  document.getElementById("annoncePrix").value = "";
+  document.getElementById("annonceDescription").value = "";
+
+  await chargerAnnonces();
+};
+
+window.openDetail = function(id) {
+  selected = annonces.find(a => String(a.id) === String(id));
+
+  if (!selected) {
+    return;
+  }
+
+  document.getElementById("detailTitle").textContent = "Annonce de " + selected.pseudo;
+  document.getElementById("detailImage").src = selected.img;
+  document.getElementById("detailAff").textContent = "💕 " + selected.aff;
+  document.getElementById("detailPlace").textContent = selected.ville + " — " + selected.region;
+  document.getElementById("detailDesc").textContent = selected.desc;
+
+  document.getElementById("detailFacts").innerHTML = `
+    <p><strong>Lien du lieu :</strong> ${selected.link}</p>
+    <p><strong>Participants déjà enregistrés :</strong> ${selected.adults}</p>
+    <p><strong>Nombre d’enfant et âge :</strong> ${selected.kids}</p>
+    <p><strong>Places restantes :</strong> ${selected.places}</p>
+    <p><strong>Conditions d’hébergement :</strong> ${selected.home}</p>
+    <p><strong>Prix / participation :</strong> ${selected.price}</p>
+    <p><strong>Dates proposées :</strong> ${selected.dates}</p>
+  `;
+
+  openModal("detailModal");
+};
+
+window.openMessage = function(mode) {
+  if (!selected) {
+    return;
+  }
+
+  const pseudo = document.getElementById("pseudoInput")?.value || "Marie75";
+
+  closeModal("detailModal");
+
+  document.getElementById("messageTitle").textContent =
+    mode === "interest"
+      ? "Prendre contact avec la co-vacancière"
+      : "Poser une question";
+
+  document.getElementById("messageSubject").value =
+    mode === "interest"
+      ? pseudo + " est intéressée pour vous accompagner en vacances !"
+      : pseudo + " veut vous poser une question";
+
+  document.getElementById("messageBody").value =
+    mode === "interest"
+      ? "Bonjour " + selected.pseudo + ",\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !"
+      : "Bonjour " + selected.pseudo + ",\n\nJ’ai une question concernant votre annonce : ";
+
+  openModal("messageModal");
+};
+
+window.creerCompte = async function() {
+  const pseudo = document.getElementById("signupPseudo").value;
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
+
+  if (!email || !password) {
+    showToast("Merci de renseigner un email et un mot de passe");
+    return;
+  }
+
+  const { data, error } = await db.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        pseudo: pseudo || ""
+      }
+    }
+  });
+
+  if (error) {
+    console.error("Erreur création compte :", error);
+    showToast("Erreur création compte : " + error.message);
+    return;
+  }
+
+  showToast("Compte créé ✅ Vérifiez votre email si Supabase le demande");
+};
+
+window.connecterCompte = async function() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  if (!email || !password) {
+    showToast("Merci de renseigner l’email et le mot de passe");
+    return;
+  }
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    console.error("Erreur connexion :", error);
+    showToast("Erreur connexion : " + error.message);
+    return;
+  }
+
+  showToast("Connexion réussie ✅");
+  closeModal("loginModal");
+};
+
+window.rechercherCovacanciere = async function() {
+  const region = document.getElementById("searchRegion").value;
+  const budget = document.getElementById("searchBudget").value;
+  const dateDebut = document.getElementById("searchDateDebut").value;
+  const dateFin = document.getElementById("searchDateFin").value;
+
+  let query = db
+    .from("annonces")
+    .select("*");
+
+  if (region) {
+    query = query.eq("région", region);
+  }
+
+  if (budget) {
+    query = query.lte("prix", parseInt(budget, 10));
+  }
+
+  if (dateDebut) {
+    query = query.gte("date_debut", dateDebut);
+  }
+
+  if (dateFin) {
+    query = query.lte("date_fin", dateFin);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Erreur recherche :", error);
+    showToast("Erreur pendant la recherche : " + error.message);
+    return;
+  }
+
+  const resultats = (data || []).map(normalizeAnnonce);
+
+  resultats.sort((a, b) => {
+    return Number(b.id || 0) - Number(a.id || 0);
+  });
+
+  renderAds(resultats);
+  closeModal("searchModal");
+
+  if (!resultats.length) {
+    showToast("Aucune co‑vacancière trouvée avec ces critères");
+  } else {
+    showToast(resultats.length + " annonce(s) trouvée(s)");
+  }
+};
+
+document.querySelectorAll(".modal").forEach(modal => {
+  modal.addEventListener("click", event => {
+    if (event.target === modal) {
+      modal.classList.remove("open");
+    }
+  });
+});
+
+chargerAnnonces();
+</script>
 
   </script>
 </body>
