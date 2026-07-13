@@ -98,23 +98,15 @@ console.log("Annonces Supabase :", data);
     document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
 async function publierAnnonce() {
 
-  const nouvelleAnnonce = {
+  console.log("annonceLien =", document.getElementById("annonceLien"));
+  console.log("annonceRegion =", document.getElementById("annonceRegion"));
+  console.log("annonceParticipants =", document.getElementById("annonceParticipants"));
+  console.log("annonceEnfants =", document.getElementById("annonceEnfants"));
+  console.log("annoncePlaces =", document.getElementById("annoncePlaces"));
+  console.log("annoncePrix =", document.getElementById("annoncePrix"));
+  console.log("annonceDescription =", document.getElementById("annonceDescription"));
 
-    lien: document.getElementById("annonceLien").value,
-
-    region: document.getElementById("annonceRegion").value,
-
-    participants: document.getElementById("annonceParticipants").value,
-
-    enfants: document.getElementById("annonceEnfants").value,
-
-    places: document.getElementById("annoncePlaces").value,
-
-    prix: document.getElementById("annoncePrix").value,
-
-    description: document.getElementById("annonceDescription").value
-
-  };
+}
 
   const { data, error } = await db
     .from("annonces")
