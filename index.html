@@ -1,5 +1,3 @@
-V2 :8 juillet
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -44,89 +42,291 @@ V2 :8 juillet
 
   <div id="loginModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>Connexion à Co‑Vacances</h3><button class="close" onclick="closeModal('loginModal')">×</button></div><div class="modal-body login-grid"><div class="login-card blue-bg"><h3>J’ai déjà un compte</h3><div class="form-field"><label>Email ou login</label><input placeholder="exemple@email.com"></div><br><div class="form-field"><label>Mot de passe</label><input type="password" placeholder="••••••••"></div><br><button class="btn primary" onclick="showToast('Connexion simulée pour le prototype')">Se connecter</button></div><div class="login-card coral-bg"><h3>Première connexion ?</h3><p class="muted">Créez un compte pour publier une annonce, contacter une co‑vacancière ou sauvegarder vos recherches.</p><div class="form-field"><label>Pseudo</label><input id="pseudoInput" value="Marie75"></div><br><div class="form-field"><label>Email</label><input placeholder="votre@email.com"></div><br><button class="btn secondary" onclick="showToast('Compte créé dans le prototype')">Créer mon compte</button></div></div></div></div>
   <div id="searchModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🔎 Trouver ma co‑vacancière</h3><button class="close" onclick="closeModal('searchModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label>Destination</label><select><option>France</option><option>Île-de-France</option><option>Vendée</option><option>Côte d'Azur</option><option>Centre</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option></select></div><div class="form-field"><label>Budget maximum</label><select><option>Peu importe</option><option>Moins de 300 €</option><option>300 € - 500 €</option><option>500 € - 800 €</option></select></div><div class="form-field"><label>Date de début</label><input type="date"></div><div class="form-field"><label>Date de fin</label><input type="date"></div></div><label class="check-field" style="margin-top:16px"><input type="checkbox" checked><span><strong>Recherche intelligente</strong><br>Étendre la sélection de résultats aux destinations proches, dates voisines et profils compatibles.</span></label><div class="modal-actions"><button class="btn ghost" onclick="closeModal('searchModal')">Quitter</button><button class="btn primary" onclick="showToast('Recherche lancée dans le prototype')">Lancer la recherche</button></div></div></div></div>
-  <div id="proposeModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🏡 Proposer un séjour</h3><button class="close" onclick="closeModal('proposeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label>Lien du lieu</label><input placeholder="Lien Airbnb, Booking, camping..."></div><div class="form-field"><label>Région / destination</label><select><option>Vendée</option><option>Côte d'Azur</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option><option>Autre</option></select></div><div class="form-field"><label>Qui sera présent ?</label><select><option>Moi et mes enfants</option><option>Moi uniquement</option><option>Moi, mes enfants et un proche</option></select></div><div class="form-field"><label>Nombre + âge des enfants</label><input placeholder="Ex : 2 enfants, 7 et 10 ans"></div><div class="form-field"><label>Places restantes</label><select><option>1 adulte</option><option>1 adulte + 1 enfant</option><option>1 adulte + 2 enfants</option><option>À discuter</option></select></div><div class="form-field"><label>Prix proposé</label><input type="number" placeholder="Ex : 450"></div><div class="form-field" style="grid-column:1/-1"><label>Description / conditions d’hébergement</label><textarea placeholder="Nombre de lits, chambres, ambiance recherchée, organisation..."></textarea></div></div><p class="help"><strong>Important :</strong> la publication de votre annonce ne vous oblige pas à accepter les propositions. Vous êtes libre de choisir qui vient avec vous, non mais !</p><div class="modal-actions"><button class="btn ghost" onclick="closeModal('proposeModal')">Quitter</button><button class="btn secondary" onclick="publierAnnonce()">Publier</button></div></div></div></div>
+  <div id="proposeModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🏡 Proposer un séjour</h3><button class="close" onclick="closeModal('proposeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label for="annonceLien">Lien du lieu</label><input id="annonceLien" placeholder="Lien Airbnb, Booking, camping..."></div><div class="form-field"><label for="annonceRegion">Région / destination</label><select id="annonceRegion"><option>Vendée</option><option>Côte d'Azur</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option><option>Autre</option></select></div><div class="form-field"><label for="annonceParticipants">Qui sera présent ?</label><select id="annonceParticipants"><option>Moi et mes enfants</option><option>Moi uniquement</option><option>Moi, mes enfants et un proche</option></select></div><div class="form-field"><label for="annonceEnfants">Nombre + âge des enfants</label><input id="annonceEnfants" placeholder="Ex : 2 enfants, 7 et 10 ans"></div><div class="form-field"><label for="annoncePlaces">Places restantes</label><select id="annoncePlaces"><option>1 adulte</option><option>1 adulte + 1 enfant</option><option>1 adulte + 2 enfants</option><option>À discuter</option></select></div><div class="form-field"><label for="annoncePrix">Prix proposé</label><input id="annoncePrix" type="number" min="0" placeholder="Ex : 450"></div><div class="form-field" style="grid-column:1/-1"><label for="annonceDescription">Description / conditions d’hébergement</label><textarea id="annonceDescription" placeholder="Nombre de lits, chambres, ambiance recherchée, organisation..."></textarea></div></div><p class="help"><strong>Important :</strong> la publication de votre annonce ne vous oblige pas à accepter les propositions. Vous êtes libre de choisir qui vient avec vous, non mais !</p><div class="modal-actions"><button class="btn ghost" onclick="closeModal('proposeModal')">Quitter</button><button class="btn secondary" onclick="publierAnnonce()">Publier</button></div></div></div></div>
   <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body"><div class="detail-grid"><img id="detailImage" src="" alt=""><div><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="concept-text"></p><div class="detail-list" id="detailFacts"></div><div class="modal-actions"><button class="btn secondary" onclick="openMessage('interest')">Ça m’intéresse !</button><button class="btn ghost" onclick="openMessage('question')">Poser une question</button></div></div></div></div></div></div>
   <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
   <div id="toast" class="toast"></div>
 
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+'use strict';
+
+/************************************************************
+ * Co-Vacances - version corrigée prête à l'emploi
+ * Corrections incluses :
+ * - openModal / closeModal accessibles depuis les boutons HTML
+ * - plus de await en dehors d'une fonction async
+ * - champs du formulaire avec IDs fiables
+ * - publication d'annonce vers Supabase
+ * - affichage immédiat de l'annonce publiée dans la page
+ ************************************************************/
+
 const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co";
-
 const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
+const TABLE_ANNONCES = "annonces";
 
-console.log("window.supabase =", window.supabase);
+let db = null;
+if (window.supabase && typeof window.supabase.createClient === "function") {
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log("Supabase connecté ✅", db);
+} else {
+  console.warn("Supabase n'est pas chargé. Vérifie la balise CDN ou les restrictions du navigateur.");
+}
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const seedAds = [
+  {id:1,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',age:'Julie, 39 ans',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août',link:'https://www.exemple-location-vendee.fr',home:'Maison 3 chambres, 4 lits, jardin clos.'},
+  {id:2,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',age:'Camille, 34 ans',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet',link:'Non renseigné',home:'Appartement proche plage, canapé-lit disponible.'},
+  {id:3,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',region:'Annecy et environ',lieu:'Lac d’Annecy',pseudo:'NinaMontagne',age:'Nina, 42 ans',aff:'84%',desc:'Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 6 et 12 ans',places:'1 adulte + 2 enfants max',price:'390 €',dates:'20 - 27 juillet',link:'https://www.exemple-chalet-annecy.fr',home:'Chalet familial, chambres séparées, terrasse.'},
+  {id:4,img:'https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80',region:'Bordeaux et environ',lieu:'Bassin d’Arcachon',pseudo:'SosoOcean',age:'Sophie, 37 ans',aff:'91%',desc:'Maison proche océan, vélo, marché local et rythme tranquille avec les enfants.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 9 ans',places:'1 adulte + 2 enfants',price:'480 €',dates:'3 - 10 août',link:'Non renseigné',home:'Maison 2 chambres + mezzanine enfants.'},
+  {id:5,img:'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80',region:'Pyrénées-Orientales',lieu:'Collioure',pseudo:'MamanSoleil66',age:'Amina, 41 ans',aff:'87%',desc:'Mer, petites visites et soirées calmes. Recherche famille respectueuse et positive.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 5 et 11 ans',places:'1 adulte + 1 enfant',price:'430 €',dates:'12 - 19 août',link:'https://www.exemple-collioure.fr',home:'Appartement avec terrasse, 3 couchages disponibles.'},
+  {id:6,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Centre',lieu:'Sologne',pseudo:'ClaireNature',age:'Claire, 44 ans',aff:'82%',desc:'Vacances au calme : nature, jeux extérieurs, barbecue et visites de châteaux.',adults:'1 adulte déjà inscrit',kids:'3 enfants : 6, 8 et 13 ans',places:'1 adulte + 2 enfants',price:'300 €',dates:'5 - 12 juillet',link:'Non renseigné',home:'Gîte familial, grand jardin, lits simples enfants.'},
+  {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
+  {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
+];
 
-const ads = [
-      {id:1,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',age:'Julie, 39 ans',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août',link:'https://www.exemple-location-vendee.fr',home:'Maison 3 chambres, 4 lits, jardin clos.'},
-      {id:2,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',age:'Camille, 34 ans',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet',link:'Non renseigné',home:'Appartement proche plage, canapé-lit disponible.'},
-      {id:3,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',region:'Annecy et environ',lieu:'Lac d’Annecy',pseudo:'NinaMontagne',age:'Nina, 42 ans',aff:'84%',desc:'Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 6 et 12 ans',places:'1 adulte + 2 enfants max',price:'390 €',dates:'20 - 27 juillet',link:'https://www.exemple-chalet-annecy.fr',home:'Chalet familial, chambres séparées, terrasse.'},
-      {id:4,img:'https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80',region:'Bordeaux et environ',lieu:'Bassin d’Arcachon',pseudo:'SosoOcean',age:'Sophie, 37 ans',aff:'91%',desc:'Maison proche océan, vélo, marché local et rythme tranquille avec les enfants.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 9 ans',places:'1 adulte + 2 enfants',price:'480 €',dates:'3 - 10 août',link:'Non renseigné',home:'Maison 2 chambres + mezzanine enfants.'},
-      {id:5,img:'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80',region:'Pyrénées-Orientales',lieu:'Collioure',pseudo:'MamanSoleil66',age:'Amina, 41 ans',aff:'87%',desc:'Mer, petites visites et soirées calmes. Recherche famille respectueuse et positive.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 5 et 11 ans',places:'1 adulte + 1 enfant',price:'430 €',dates:'12 - 19 août',link:'https://www.exemple-collioure.fr',home:'Appartement avec terrasse, 3 couchages disponibles.'},
-      {id:6,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Centre',lieu:'Sologne',pseudo:'ClaireNature',age:'Claire, 44 ans',aff:'82%',desc:'Vacances au calme : nature, jeux extérieurs, barbecue et visites de châteaux.',adults:'1 adulte déjà inscrit',kids:'3 enfants : 6, 8 et 13 ans',places:'1 adulte + 2 enfants',price:'300 €',dates:'5 - 12 juillet',link:'Non renseigné',home:'Gîte familial, grand jardin, lits simples enfants.'},
-      {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
-      {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
-    ];
-/*
-async function loadAdsFromSupabase() {
+const ads = [...seedAds];
+let selected = null;
 
-  const { data, error } = await supabase
-    .from('annonces')
-    .select('*');
+function byId(id) {
+  return document.getElementById(id);
+}
 
-  if (error) {
-    onsole.error(error);
+function openModal(id) {
+  const modal = byId(id);
+  if (!modal) {
+    console.error(`Modal introuvable : ${id}`);
+    return;
+  }
+  modal.classList.add('open');
+}
+
+function closeModal(id) {
+  const modal = byId(id);
+  if (!modal) {
+    console.error(`Modal introuvable : ${id}`);
+    return;
+  }
+  modal.classList.remove('open');
+}
+
+function showToast(msg) {
+  const t = byId('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  window.setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[char]));
+}
+
+function normalizeAnnonce(row, index = 0) {
+  const prix = row.prix ?? row.price ?? '';
+  const prixAffiche = prix === '' ? 'À discuter' : `${prix} €`.replace('€ €', '€');
+  return {
+    id: row.id ?? Date.now() + index,
+    img: row.img || row.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+    region: row.region || 'Destination à préciser',
+    lieu: row.lieu || row.region || 'Séjour proposé',
+    pseudo: row.pseudo || 'Parent solo',
+    age: row.age || '',
+    aff: row.aff || 'Nouveau',
+    desc: row.description || row.desc || 'Annonce publiée depuis le site Co-Vacances.',
+    adults: row.participants || row.adults || 'À préciser',
+    kids: row.enfants || row.kids || 'À préciser',
+    places: row.places || row.places_restantes || 'À discuter',
+    price: prixAffiche,
+    dates: row.dates || 'Dates à préciser',
+    link: row.lien || row.link || 'Non renseigné',
+    home: row.hebergement || row.home || row.description || 'Conditions à préciser'
+  };
+}
+
+function renderAds() {
+  const grid = byId('adsGrid');
+  if (!grid) return;
+
+  grid.innerHTML = ads.map(a => `
+    <article class="ad" onclick="openDetail(${a.id})">
+      <div class="ad-img">
+        <img src="${escapeHTML(a.img)}" alt="${escapeHTML(a.region)}">
+        <span class="aff">💕 ${escapeHTML(a.aff)}</span>
+        <span class="price">${escapeHTML(a.price)}</span>
+      </div>
+      <div class="ad-body">
+        <h3>${escapeHTML(a.lieu)}</h3>
+        <p class="muted">📍 ${escapeHTML(a.region)} • 📅 ${escapeHTML(a.dates)}</p>
+        <p class="desc">${escapeHTML(a.desc)}</p>
+        <div class="facts">
+          <p><strong>Participants :</strong> ${escapeHTML(a.adults)}</p>
+          <p><strong>Enfants :</strong> ${escapeHTML(a.kids)}</p>
+          <p><strong>Places restantes :</strong> ${escapeHTML(a.places)}</p>
+          <p><strong>Prix :</strong> ${escapeHTML(a.price)}</p>
+        </div>
+        <button class="btn primary" type="button">Voir le séjour</button>
+      </div>
+    </article>
+  `).join('');
+}
+
+function openDetail(id) {
+  selected = ads.find(a => String(a.id) === String(id));
+  if (!selected) {
+    showToast('Annonce introuvable');
     return;
   }
 
-console.log("Annonces Supabase :", data);
+  byId('detailTitle').textContent = 'Annonce de ' + selected.pseudo;
+  byId('detailImage').src = selected.img;
+  byId('detailImage').alt = selected.region;
+  byId('detailAff').textContent = '💕 ' + selected.aff + " d’affinités";
+  byId('detailPlace').textContent = selected.lieu + ' — ' + selected.region;
+  byId('detailDesc').textContent = selected.desc;
+  byId('detailFacts').innerHTML = `
+    <p><strong>Lien du lieu :</strong> ${escapeHTML(selected.link)}</p>
+    <p><strong>Participants déjà enregistrés :</strong> ${escapeHTML(selected.adults)}</p>
+    <p><strong>Nombre d’enfant et âge :</strong> ${escapeHTML(selected.kids)}</p>
+    <p><strong>Places restantes :</strong> ${escapeHTML(selected.places)}</p>
+    <p><strong>Conditions d’hébergement :</strong> ${escapeHTML(selected.home)}</p>
+    <p><strong>Prix / participation :</strong> ${escapeHTML(selected.price)}</p>
+    <p><strong>Dates proposées :</strong> ${escapeHTML(selected.dates)}</p>
+  `;
+  openModal('detailModal');
 }
-*/
 
-    let selected=null;
-    function renderAds(){document.getElementById('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><img src="${a.img}" alt="${a.region}"><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p><p><strong>Prix :</strong> ${a.price}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
-    function openModal(id){document.getElementById(id).classList.add('open')} function closeModal(id){document.getElementById(id).classList.remove('open')} 
-    function openDetail(id){selected=ads.find(a=>a.id===id);document.getElementById('detailTitle').textContent='Annonce de '+selected.pseudo;document.getElementById('detailImage').src=selected.img;document.getElementById('detailAff').textContent='💕 '+selected.aff+' d’affinités';document.getElementById('detailPlace').textContent=selected.lieu+' — '+selected.region;document.getElementById('detailDesc').textContent=selected.desc;document.getElementById('detailFacts').innerHTML=`<p><strong>Lien du lieu :</strong> ${selected.link}</p><p><strong>Participants déjà enregistrés :</strong> ${selected.adults}</p><p><strong>Nombre d’enfant et âge :</strong> ${selected.kids}</p><p><strong>Places restantes :</strong> ${selected.places}</p><p><strong>Conditions d’hébergement :</strong> ${selected.home}</p><p><strong>Prix / participation :</strong> ${selected.price}</p><p><strong>Dates proposées :</strong> ${selected.dates}</p>`;openModal('detailModal')}
-    function openMessage(mode){const pseudo=document.getElementById('pseudoInput')?.value||'Marie75';closeModal('detailModal');document.getElementById('messageTitle').textContent=mode==='interest'?'Prendre contact avec la co-vacancière':'Poser une question';document.getElementById('messageSubject').value=mode==='interest'?`${pseudo} est intéressée pour vous accompagner en vacances !`:`${pseudo} veut vous poser une question`;document.getElementById('messageBody').value=mode==='interest'?`Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`:`Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;openModal('messageModal')}
-    function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-async function publierAnnonce() {
-
-  console.log("annonceLien =", document.getElementById("annonceLien"));
-  console.log("annonceRegion =", document.getElementById("annonceRegion"));
-  console.log("annonceParticipants =", document.getElementById("annonceParticipants"));
-  console.log("annonceEnfants =", document.getElementById("annonceEnfants"));
-  console.log("annoncePlaces =", document.getElementById("annoncePlaces"));
-  console.log("annoncePrix =", document.getElementById("annoncePrix"));
-  console.log("annonceDescription =", document.getElementById("annonceDescription"));
-
+function openMessage(mode) {
+  if (!selected) {
+    showToast('Sélectionne d’abord une annonce');
+    return;
+  }
+  const pseudo = byId('pseudoInput')?.value || 'Marie75';
+  closeModal('detailModal');
+  byId('messageTitle').textContent = mode === 'interest' ? 'Prendre contact avec la co-vacancière' : 'Poser une question';
+  byId('messageSubject').value = mode === 'interest'
+    ? `${pseudo} est intéressée pour vous accompagner en vacances !`
+    : `${pseudo} veut vous poser une question`;
+  byId('messageBody').value = mode === 'interest'
+    ? `Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`
+    : `Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;
+  openModal('messageModal');
 }
+
+async function loadAdsFromSupabase() {
+  if (!db) return;
 
   const { data, error } = await db
-    .from("annonces")
+    .from(TABLE_ANNONCES)
+    .select('*')
+    .limit(50);
+
+  if (error) {
+    console.warn('Chargement Supabase impossible :', error);
+    return;
+  }
+
+  if (Array.isArray(data) && data.length > 0) {
+    data.forEach((row, index) => {
+      const normalized = normalizeAnnonce(row, index);
+      if (!ads.some(a => String(a.id) === String(normalized.id))) {
+        ads.unshift(normalized);
+      }
+    });
+    renderAds();
+  }
+}
+
+async function publierAnnonce() {
+  const lien = byId('annonceLien')?.value.trim() || 'Non renseigné';
+  const region = byId('annonceRegion')?.value || 'Autre';
+  const participants = byId('annonceParticipants')?.value || 'À préciser';
+  const enfants = byId('annonceEnfants')?.value.trim() || 'À préciser';
+  const places = byId('annoncePlaces')?.value || 'À discuter';
+  const prixValue = byId('annoncePrix')?.value;
+  const prix = prixValue === '' ? null : Number(prixValue);
+  const description = byId('annonceDescription')?.value.trim() || 'Annonce publiée depuis le site Co-Vacances.';
+
+  if (!description || description.length < 8) {
+    showToast('Ajoute une description un peu plus complète');
+    return;
+  }
+
+  if (prix !== null && Number.isNaN(prix)) {
+    showToast('Le prix doit être un nombre');
+    return;
+  }
+
+  const nouvelleAnnonce = {
+    lien,
+    region,
+    participants,
+    enfants,
+    places,
+    prix,
+    description
+  };
+
+  if (!db) {
+    console.error('Supabase non initialisé');
+    showToast('Supabase non chargé : annonce non enregistrée');
+    return;
+  }
+
+  const { error } = await db
+    .from(TABLE_ANNONCES)
     .insert([nouvelleAnnonce]);
 
   if (error) {
-
-    console.error(error);
-
-    showToast("Erreur lors de la publication");
-
+    console.error('Erreur Supabase :', error);
+    showToast('Erreur Supabase : vérifie la console');
     return;
   }
 
-  showToast("Annonce publiée ✅");
+  const annonceLocale = normalizeAnnonce({
+    ...nouvelleAnnonce,
+    id: Date.now(),
+    pseudo: byId('pseudoInput')?.value || 'Parent solo',
+    lieu: region,
+    dates: 'Dates à préciser',
+    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
+    aff: 'Nouveau',
+    hebergement: description
+  });
 
-  closeModal("proposeModal");
+  ads.unshift(annonceLocale);
+  renderAds();
+  showToast('Annonce publiée ✅');
+  closeModal('proposeModal');
 
+  byId('annonceLien').value = '';
+  byId('annonceEnfants').value = '';
+  byId('annoncePrix').value = '';
+  byId('annonceDescription').value = '';
 }
-renderAds();
-  </script>
+
+// Important : les fonctions appelées par onclick doivent être globales.
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.openDetail = openDetail;
+window.openMessage = openMessage;
+window.showToast = showToast;
+window.publierAnnonce = publierAnnonce;
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderAds();
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', event => {
+      if (event.target === modal) modal.classList.remove('open');
+    });
+  });
+  loadAdsFromSupabase();
+});
+</script>
 </body>
 </html>
