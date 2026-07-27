@@ -251,16 +251,26 @@ async function publierAnnonce() {
   const places = byId('annoncePlaces')?.value || 'À discuter';
   const prixValue = byId('annoncePrix')?.value;
   const prix = prixValue === '' ? null : Number(prixValue);
-  const description = byId('annonceDescription')?.value.trim() || 'Annonce publiée depuis le site Co‑Vacances.';
+  const description = byId('annonceDescription')?.value.trim() || '';
+
+  if (!description || description.length < 8) {
+    showToast('Ajoute une description un peu plus complète');
+    return;
+  }
+
+  if (prix !== null && Number.isNaN(prix)) {
+    showToast('Le prix doit être un nombre');
+    return;
+  }
 
   const nouvelleAnnonce = {
-    lien: lien,
-    region: region,
-    participants: participants,
-    enfants: enfants,
-    places: places,
-    prix: prix,
-    description: description
+    lien,
+    region,
+    participants,
+    enfants,
+    places,
+    prix,
+    description
   };
 
   console.log("Annonce envoyée :", nouvelleAnnonce);
@@ -282,43 +292,6 @@ async function publierAnnonce() {
   await loadAdsFromSupabase();
 }
 
-  if (!description || description.length < 8) {
-    showToast('Ajoute une description un peu plus complète');
-    return;
-  }
-
-  if (prix !== null && Number.isNaN(prix)) {
-    showToast('Le prix doit être un nombre');
-    return;
-  }
-
-const nouvelleAnnonce = {
-  lien: lien,
-
-  région: region,
-
-  ville: "",
-
-  date_debut: null,
-
-  date_fin: null,
-
-  prix: prix,
-
-  lien_hebergement: lien,
-
-  participant: 1,
-
-  enfants: enfants,
-
-  centres_interet: "",
-
-  places_restantes: 1,
-
-  description: description,
-
-  auteur: "Tatiana"
-};
 
   if (!db) {
     console.error('Supabase non initialisé');
