@@ -1,91 +1,19 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Co-Vacances - Prototype V2</title>
-  <style>
-    :root{
-      --lagoon:#3BAFDA;--lagoon-dark:#2c95bd;--coral:#FF7A59;--coral-dark:#ef6340;
-      --sun:#FFC857;--sand:#FFFDF8;--soft:#64748B;--text:#1E293B;--mint:#DFF7F8;
-      --rose:#FFEAE3;--yellow:#FFF3D6;--lav:#F0ECFF;--border:#E2E8F0;--shadow:0 18px 45px rgba(15,23,42,.12);
-    }
-    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--sand);color:var(--text)}
-    a{color:inherit;text-decoration:none}.container{width:min(1180px,92%);margin:auto}.btn{border:0;border-radius:18px;padding:14px 22px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 10px 22px rgba(15,23,42,.12)}
-    .btn:hover{transform:translateY(-2px)}.primary{background:var(--lagoon);color:white}.primary:hover{background:var(--lagoon-dark)}.secondary{background:var(--coral);color:white}.secondary:hover{background:var(--coral-dark)}.ghost{background:white;color:var(--text);border:1px solid var(--border)}
-    .topbar{position:sticky;top:0;z-index:40;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,232,240,.7)}
-    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:12px}.logo{height:52px;width:52px;border-radius:18px;background:white;display:grid;place-items:center;font-size:27px;box-shadow:var(--shadow)}
-    .brand h1{font-size:31px;margin:0;letter-spacing:-1px}.brand h1 span:first-child{color:var(--lagoon)}.brand h1 span:last-child{color:var(--coral)}.brand small{color:var(--soft);font-weight:700}.nav-links{display:flex;gap:26px;color:#334155;font-size:14px;font-weight:800}.nav-actions{display:flex;gap:10px;align-items:center}
-    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#E8F8FC 0%,#FFFDF8 45%,#FFEFE8 100%);padding:70px 0 90px}.blob{position:absolute;border-radius:999px;filter:blur(40px);opacity:.65}.b1{right:-90px;top:-80px;width:380px;height:380px;background:var(--sun)}.b2{left:-90px;bottom:0;width:300px;height:300px;background:var(--lagoon);opacity:.25}.hero-grid{position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}.pill{display:inline-flex;gap:8px;background:white;border:1px solid #f7ddd2;color:var(--coral);padding:11px 16px;border-radius:999px;font-weight:900;box-shadow:0 8px 18px rgba(15,23,42,.06)}
-    h2.hero-title{font-size:clamp(42px,6.5vw,76px);line-height:.95;letter-spacing:-3px;margin:24px 0 18px}.hero-title .accent{color:var(--coral)}.lead{font-size:20px;line-height:1.55;color:#475569;max-width:610px}.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}.benefits-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}.mini{display:flex;gap:12px;align-items:center}.mini-icon{min-width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:25px}.mini strong{display:block}.mini span{font-size:13px;color:#475569}
-    .hero-card{background:white;border:8px solid white;border-radius:42px;overflow:hidden;box-shadow:var(--shadow);position:relative}.hero-photo{height:520px;background:linear-gradient(135deg,#DFF7F8,#FFEAE3,#FFF3D6);display:grid;place-items:center;text-align:center;padding:35px}.hero-photo .emoji{font-size:88px}.hero-photo h3{font-size:34px;margin:15px 0 8px}.trust-card{position:absolute;right:20px;bottom:-26px;background:white;border-radius:26px;padding:16px 20px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}.avatars{display:flex}.avatar{width:42px;height:42px;border-radius:50%;background:var(--rose);border:3px solid white;display:grid;place-items:center;font-weight:900;color:var(--coral);margin-left:-8px}.avatar:first-child{margin-left:0}.stars{color:var(--sun);font-weight:900}
-    .search-box{margin-top:-42px;position:relative;z-index:5;background:white;border-radius:30px;box-shadow:var(--shadow);padding:24px;border:1px solid #F1F5F9}.search-box h3{margin:0 0 18px;font-size:25px}.search-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.35fr .9fr;gap:13px}.field{border:1px solid var(--border);border-radius:18px;padding:12px 14px;background:white;display:flex;gap:10px;align-items:center}.field label{font-size:12px;color:var(--soft);display:block}.field select,.field input{border:0;outline:0;width:100%;font-weight:800;background:transparent;color:var(--text)}.check-field{border:1px solid var(--border);border-radius:18px;padding:12px;background:white;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#475569}.check-field strong{color:var(--text)}
-    section{padding:70px 0}.section-title{font-size:38px;margin:0 0 14px;letter-spacing:-1px}.section-sub{color:var(--soft);font-size:18px;margin:0 0 30px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px}.panel{background:white;border:1px solid #F1F5F9;border-radius:32px;padding:30px;box-shadow:0 12px 30px rgba(15,23,42,.06)}.concept-text{font-size:18px;line-height:1.6;color:#475569}.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.value{background:#fff;border-radius:26px;padding:20px;text-align:center;border:1px solid #F1F5F9}.value .circle{width:72px;height:72px;margin:0 auto 13px;border-radius:50%;display:grid;place-items:center;font-size:32px}.value h4{margin:0 0 8px}.value p{margin:0;color:#475569;font-size:14px;line-height:1.4}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.step{text-align:center}.step .num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--coral);color:white;font-weight:900;margin-bottom:-15px;position:relative;z-index:2}.step .icon{width:88px;height:88px;margin:auto;border-radius:50%;background:#E8F8FC;display:grid;place-items:center;font-size:38px}.step h4{font-size:15px}
-    .ads-section{background:linear-gradient(180deg,#fff,#E8F8FC80)}.ads-head{display:flex;justify-content:space-between;gap:20px;align-items:end}.badge{background:var(--rose);color:var(--coral);font-weight:900;border-radius:999px;padding:12px 18px}.ads-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:30px}.ad{background:white;border-radius:30px;overflow:hidden;border:1px solid #F1F5F9;box-shadow:0 14px 30px rgba(15,23,42,.08);cursor:pointer;transition:.2s}.ad:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.ad-img{height:150px;position:relative}.ad-img img{width:100%;height:100%;object-fit:cover}.aff{position:absolute;top:12px;left:12px;background:white;color:var(--coral);border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.price{position:absolute;bottom:12px;right:12px;background:#1E293Bd8;color:white;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.ad-body{padding:17px}.ad h3{font-size:20px;margin:0 0 4px}.muted{color:var(--soft)}.desc{font-size:14px;color:#475569;line-height:1.43;min-height:58px}.facts{display:grid;gap:7px;font-size:13px;color:#475569}.facts strong{color:var(--text)}.ad .btn{width:100%;margin-top:15px;padding:12px;border-radius:16px}
-    .trust{background:var(--lagoon);color:white}.trust-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.trust-item{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:22px}.trust-item h4{margin:0 0 8px;font-size:18px}.trust-item p{margin:0;color:rgba(255,255,255,.85);font-size:14px;line-height:1.4}.footer{background:#0f172a;color:white;padding:34px 0}.footer-grid{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer p{color:#cbd5e1;max-width:620px}.footer-links{display:flex;gap:18px;color:#e2e8f0;font-weight:800;font-size:14px}
-    .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.64);z-index:100;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.modal.open{display:flex}.modal-content{width:min(880px,96vw);max-height:90vh;overflow:auto;background:white;border-radius:30px;box-shadow:0 30px 80px rgba(0,0,0,.3)}.modal-head{position:sticky;top:0;background:white;border-bottom:1px solid var(--border);padding:22px 26px;display:flex;justify-content:space-between;align-items:center;z-index:2}.modal-head h3{margin:0;font-size:25px}.close{border:0;background:#F1F5F9;border-radius:50%;width:42px;height:42px;font-size:24px;cursor:pointer}.modal-body{padding:26px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field{display:flex;flex-direction:column;gap:7px}.form-field label{font-weight:900}.form-field input,.form-field select,.form-field textarea{border:1px solid var(--border);border-radius:16px;padding:13px;outline:0;font:inherit}.form-field textarea{min-height:110px;resize:vertical}.help{background:var(--yellow);border-radius:20px;padding:14px;color:#475569}.modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}.detail-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:24px}.detail-grid img{width:100%;height:300px;object-fit:cover;border-radius:24px}.detail-list{display:grid;gap:9px;color:#475569}.detail-list strong{color:var(--text)}.login-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.login-card{border-radius:24px;padding:22px}.blue-bg{background:#E8F8FC}.coral-bg{background:#FFEAE3}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:white;padding:14px 20px;border-radius:999px;box-shadow:var(--shadow);display:none;z-index:200;font-weight:800}.toast.show{display:block}
-    @media(max-width:980px){.nav-links{display:none}.hero-grid,.info-grid,.detail-grid,.login-grid{grid-template-columns:1fr}.search-grid{grid-template-columns:1fr 1fr}.ads-grid{grid-template-columns:repeat(2,1fr)}.value-grid,.steps,.trust-row{grid-template-columns:repeat(2,1fr)}.hero-photo{height:360px}.benefits-mini{grid-template-columns:1fr}}
-    @media(max-width:620px){.nav{height:auto;padding:14px 0;align-items:flex-start}.nav-actions{width:100%}.nav-actions .btn{flex:1;padding:12px}.search-grid,.ads-grid,.value-grid,.steps,.trust-row,.form-grid{grid-template-columns:1fr}.hero{padding-top:35px}.footer-grid{flex-direction:column;align-items:flex-start}.footer-links{flex-wrap:wrap}.section-title{font-size:30px}}
-  </style>
-</head>
-<body>
-  <div class="topbar"><div class="container nav"><a class="brand" href="#"><div class="logo">🌊</div><div><h1><span>Co</span><span>-Vacances</span></h1><small>Vacances partagées entre parents solos</small></div></a><div class="nav-links"><a href="#concept">Le concept</a><a href="#annonces">Annonces</a><a href="#avantages">Avantages</a><a href="#confiance">Confiance</a></div><div class="nav-actions"><button class="btn ghost" onclick="openModal('loginModal')">Connexion</button><button class="btn secondary" onclick="openModal('loginModal')">Inscription</button></div></div></div>
-  <header class="hero"><div class="blob b1"></div><div class="blob b2"></div><div class="container hero-grid"><div><div class="pill">🤝 Solidarité • ☀️ Vacances • 💛 Confiance</div><h2 class="hero-title">Vous êtes maman solo ?<br><span class="accent">Ne partez plus seule.</span></h2><p class="lead">Rencontrez d'autres familles monoparentales, partagez un logement, réduisez les frais et offrez à vos enfants des vacances plus conviviales.</p><div class="benefits-mini"><div class="mini"><div class="mini-icon" style="background:var(--yellow)">👩‍👧‍👦</div><div><strong>Rencontrez</strong><span>d’autres parents solos</span></div></div><div class="mini"><div class="mini-icon" style="background:var(--mint)">🏡</div><div><strong>Partagez</strong><span>le logement et les frais</span></div></div><div class="mini"><div class="mini-icon" style="background:var(--rose)">💛</div><div><strong>Choisissez</strong><span>librement avec qui partir</span></div></div></div><div class="hero-actions"><button class="btn primary" onclick="openModal('searchModal')">🔎 Trouver ma co-vacancière</button><button class="btn secondary" onclick="openModal('proposeModal')">Proposer un séjour +</button></div></div><div class="hero-card"><div class="hero-photo"><div><div class="emoji">🏖️👩‍👧‍👦</div><h3>Des vacances plus simples, ensemble.</h3><p class="muted">Un espace rassurant pour partager un logement déjà réservé ou construire un projet de vacances à plusieurs.</p></div></div><div class="trust-card"><div class="avatars"><div class="avatar">J</div><div class="avatar">C</div><div class="avatar">N</div></div><div><div class="stars">★★★★★</div><small><strong>Communauté bienveillante</strong><br>profils et échanges sécurisés</small></div></div></div></div></header>
-  <main>
-    <section class="container search-box"><h3>Où et quand souhaitez-vous partir ?</h3><div class="search-grid"><div class="field"><span>📍</span><div><label>Destination</label><select id="quickDestination"><option>Toutes les régions</option><option>France</option><option>Île-de-France</option><option>Vendée</option><option>Côte d'Azur</option><option>Centre</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option></select></div></div><div class="field"><span>📅</span><div><label>Début</label><input type="date"></div></div><div class="field"><span>📅</span><div><label>Fin</label><input type="date"></div></div><label class="check-field"><input type="checkbox" checked><span><strong>Recherche intelligente</strong><br>Élargir aux destinations et dates proches</span></label><button class="btn primary" onclick="openModal('searchModal')">Rechercher</button></div></section>
-    <section id="concept"><div class="container info-grid"><div class="panel"><h2 class="section-title">C’est quoi Co‑Vacances ?</h2><p class="concept-text">Co‑Vacances permet aux familles monoparentales de partager un logement de vacances afin de réduire les coûts, créer du lien social et offrir aux enfants des compagnons de vacances. L’idée est simple : une personne publie un séjour ou un logement déjà réservé, les autres familles intéressées prennent contact, puis chacun reste libre de choisir avec qui partir.</p></div><div class="panel" id="avantages"><h2 class="section-title">Les avantages</h2><div class="value-grid"><div class="value"><div class="circle" style="background:var(--rose)">💰</div><h4>Économiser</h4><p>Partager le prix du logement.</p></div><div class="value"><div class="circle" style="background:var(--mint)">👥</div><h4>Créer du lien</h4><p>Rencontrer des familles similaires.</p></div><div class="value"><div class="circle" style="background:var(--yellow)">👧</div><h4>Enfants heureux</h4><p>Des copains pendant les vacances.</p></div><div class="value"><div class="circle" style="background:var(--lav)">🛡️</div><h4>Libre choix</h4><p>Aucune obligation d’accepter.</p></div></div></div></div></section>
-    <section><div class="container"><h2 class="section-title">Comment ça marche ?</h2><p class="section-sub">Un parcours volontairement simple pour une première version MVP.</p><div class="steps"><div class="step"><div class="num">1</div><div class="icon">👤</div><h4>Je crée mon profil</h4></div><div class="step"><div class="num">2</div><div class="icon">🏡</div><h4>Je cherche ou publie un séjour</h4></div><div class="step"><div class="num">3</div><div class="icon">💬</div><h4>J’échange en privé</h4></div><div class="step"><div class="num">4</div><div class="icon">🌴</div><h4>Nous partons ensemble</h4></div></div></div></section>
-    <section id="annonces" class="ads-section"><div class="container"><div class="ads-head"><div><h2 class="section-title">Annonces proposées</h2><p class="section-sub">Des séjours fictifs pour tester le parcours utilisateur et le maquettage.</p></div><span class="badge">💕 Affinités & confiance</span></div><div class="ads-grid" id="adsGrid"></div></div></section>
-    <section id="confiance" class="trust"><div class="container"><h2 class="section-title">Un cadre rassurant pour échanger</h2><div class="trust-row"><div class="trust-item"><h4>🛡️ Profils vérifiés</h4><p>Un espace pensé pour rassurer avant tout contact.</p></div><div class="trust-item"><h4>💬 Messagerie privée</h4><p>L’adresse email reste masquée dans le prototype.</p></div><div class="trust-item"><h4>💛 Bienveillance</h4><p>Une communauté centrée sur l’entraide entre parents solos.</p></div><div class="trust-item"><h4>🔒 Liberté de choix</h4><p>Publier une annonce n’oblige jamais à accepter une proposition.</p></div></div></div></section>
-  </main>
-  <footer class="footer"><div class="container footer-grid"><div><h2>☀️ Co‑Vacances</h2><p>Des vacances plus simples, plus économiques et plus conviviales pour les familles monoparentales.</p></div><div class="footer-links"><a href="#">Contact</a><a href="#">Confidentialité</a><a href="#">Conditions</a></div></div></footer>
-
-  <div id="loginModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>Connexion à Co‑Vacances</h3><button class="close" onclick="closeModal('loginModal')">×</button></div><div class="modal-body login-grid"><div class="login-card blue-bg"><h3>J’ai déjà un compte</h3><div class="form-field"><label>Email ou login</label><input placeholder="exemple@email.com"></div><br><div class="form-field"><label>Mot de passe</label><input type="password" placeholder="••••••••"></div><br><button class="btn primary" onclick="showToast('Connexion simulée pour le prototype')">Se connecter</button></div><div class="login-card coral-bg"><h3>Première connexion ?</h3><p class="muted">Créez un compte pour publier une annonce, contacter une co‑vacancière ou sauvegarder vos recherches.</p><div class="form-field"><label>Pseudo</label><input id="pseudoInput" value="Marie75"></div><br><div class="form-field"><label>Email</label><input placeholder="votre@email.com"></div><br><button class="btn secondary" onclick="showToast('Compte créé dans le prototype')">Créer mon compte</button></div></div></div></div>
-  <div id="searchModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🔎 Trouver ma co‑vacancière</h3><button class="close" onclick="closeModal('searchModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label>Destination</label><select><option>France</option><option>Île-de-France</option><option>Vendée</option><option>Côte d'Azur</option><option>Centre</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option></select></div><div class="form-field"><label>Budget maximum</label><select><option>Peu importe</option><option>Moins de 300 €</option><option>300 € - 500 €</option><option>500 € - 800 €</option></select></div><div class="form-field"><label>Date de début</label><input type="date"></div><div class="form-field"><label>Date de fin</label><input type="date"></div></div><label class="check-field" style="margin-top:16px"><input type="checkbox" checked><span><strong>Recherche intelligente</strong><br>Étendre la sélection de résultats aux destinations proches, dates voisines et profils compatibles.</span></label><div class="modal-actions"><button class="btn ghost" onclick="closeModal('searchModal')">Quitter</button><button class="btn primary" onclick="showToast('Recherche lancée dans le prototype')">Lancer la recherche</button></div></div></div></div>
-  <div id="proposeModal" class="modal"><div class="modal-content"><div class="modal-head"><h3>🏡 Proposer un séjour</h3><button class="close" onclick="closeModal('proposeModal')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-field"><label for="annonceLien">Lien du lieu</label><input id="annonceLien" placeholder="Lien Airbnb, Booking, camping..."></div><div class="form-field"><label for="annonceRegion">Région / destination</label><select id="annonceRegion"><option>Vendée</option><option>Côte d'Azur</option><option>Bordeaux et environ</option><option>Annecy et environ</option><option>Pyrénées-Orientales</option><option>Autre</option></select></div><div class="form-field"><label for="annonceParticipants">Qui sera présent ?</label><select id="annonceParticipants"><option>Moi et mes enfants</option><option>Moi uniquement</option><option>Moi, mes enfants et un proche</option></select></div><div class="form-field"><label for="annonceEnfants">Nombre + âge des enfants</label><input id="annonceEnfants" placeholder="Ex : 2 enfants, 7 et 10 ans"></div><div class="form-field"><label for="annoncePlaces">Places restantes</label><select id="annoncePlaces"><option>1 adulte</option><option>1 adulte + 1 enfant</option><option>1 adulte + 2 enfants</option><option>À discuter</option></select></div><div class="form-field"><label for="annoncePrix">Prix proposé</label><input id="annoncePrix" type="number" min="0" placeholder="Ex : 450"></div><div class="form-field" style="grid-column:1/-1"><label for="annonceDescription">Description / conditions d’hébergement</label><textarea id="annonceDescription" placeholder="Nombre de lits, chambres, ambiance recherchée, organisation..."></textarea></div></div><p class="help"><strong>Important :</strong> la publication de votre annonce ne vous oblige pas à accepter les propositions. Vous êtes libre de choisir qui vient avec vous, non mais !</p><div class="modal-actions"><button class="btn ghost" onclick="closeModal('proposeModal')">Quitter</button><button class="btn secondary" onclick="publierAnnonce()">Publier</button></div></div></div></div>
-  <div id="detailModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body"><div class="detail-grid"><img id="detailImage" src="" alt=""><div><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="concept-text"></p><div class="detail-list" id="detailFacts"></div><div class="modal-actions"><button class="btn secondary" onclick="openMessage('interest')">Ça m’intéresse !</button><button class="btn ghost" onclick="openMessage('question')">Poser une question</button></div></div></div></div></div></div>
-  <div id="messageModal" class="modal"><div class="modal-content"><div class="modal-head"><h3 id="messageTitle">Message</h3><button class="close" onclick="closeModal('messageModal')">×</button></div><div class="modal-body"><div class="form-field"><label>À</label><input value="Adresse email masquée pour protéger la confidentialité" disabled></div><br><div class="form-field"><label>Objet</label><input id="messageSubject" disabled></div><br><div class="form-field"><label>Votre message</label><textarea id="messageBody"></textarea></div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('messageModal')">Retour</button><button class="btn primary" onclick="showToast('Message envoyé dans le prototype')">Envoyer</button></div></div></div></div>
-  <div id="toast" class="toast"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
-
-/************************************************************
- * Co-Vacances - version corrigée prête à l'emploi
- * Corrections incluses :
- * - openModal / closeModal accessibles depuis les boutons HTML
- * - plus de await en dehors d'une fonction async
- * - champs du formulaire avec IDs fiables
- * - publication d'annonce vers Supabase
- * - affichage immédiat de l'annonce publiée dans la page
- ************************************************************/
 
 const SUPABASE_URL = "https://xixsokdzqqvqxfwpdche.supabase.co";
 const SUPABASE_KEY = "sb_publishable_HW3lE4vpyklziTuUaCHdWQ_OnGHKkYt";
 const TABLE_ANNONCES = "annonces";
 
 let db = null;
+
 if (window.supabase && typeof window.supabase.createClient === "function") {
   db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  console.log("Supabase connecté ✅", db);
+  console.log("Supabase connecté ✅");
 } else {
-  console.warn("Supabase n'est pas chargé. Vérifie la balise CDN ou les restrictions du navigateur.");
+  console.error("Supabase n'est pas chargé ❌");
 }
-
-const seedAds = [
-  {id:1,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',age:'Julie, 39 ans',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août',link:'https://www.exemple-location-vendee.fr',home:'Maison 3 chambres, 4 lits, jardin clos.'},
-  {id:2,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',age:'Camille, 34 ans',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet',link:'Non renseigné',home:'Appartement proche plage, canapé-lit disponible.'},
-  {id:3,img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',region:'Annecy et environ',lieu:'Lac d’Annecy',pseudo:'NinaMontagne',age:'Nina, 42 ans',aff:'84%',desc:'Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 6 et 12 ans',places:'1 adulte + 2 enfants max',price:'390 €',dates:'20 - 27 juillet',link:'https://www.exemple-chalet-annecy.fr',home:'Chalet familial, chambres séparées, terrasse.'},
-  {id:4,img:'https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=900&q=80',region:'Bordeaux et environ',lieu:'Bassin d’Arcachon',pseudo:'SosoOcean',age:'Sophie, 37 ans',aff:'91%',desc:'Maison proche océan, vélo, marché local et rythme tranquille avec les enfants.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 9 ans',places:'1 adulte + 2 enfants',price:'480 €',dates:'3 - 10 août',link:'Non renseigné',home:'Maison 2 chambres + mezzanine enfants.'},
-  {id:5,img:'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80',region:'Pyrénées-Orientales',lieu:'Collioure',pseudo:'MamanSoleil66',age:'Amina, 41 ans',aff:'87%',desc:'Mer, petites visites et soirées calmes. Recherche famille respectueuse et positive.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 5 et 11 ans',places:'1 adulte + 1 enfant',price:'430 €',dates:'12 - 19 août',link:'https://www.exemple-collioure.fr',home:'Appartement avec terrasse, 3 couchages disponibles.'},
-  {id:6,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Centre',lieu:'Sologne',pseudo:'ClaireNature',age:'Claire, 44 ans',aff:'82%',desc:'Vacances au calme : nature, jeux extérieurs, barbecue et visites de châteaux.',adults:'1 adulte déjà inscrit',kids:'3 enfants : 6, 8 et 13 ans',places:'1 adulte + 2 enfants',price:'300 €',dates:'5 - 12 juillet',link:'Non renseigné',home:'Gîte familial, grand jardin, lits simples enfants.'},
-  {id:7,img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80',region:'Île-de-France',lieu:'Fontainebleau',pseudo:'LinaWeekEnd',age:'Lina, 32 ans',aff:'78%',desc:'Week-end prolongé proche Paris pour tester le concept avant de partir plus loin.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 6 ans',places:'1 adulte + 1 enfant',price:'120 €',dates:'18 - 21 juillet',link:'Non renseigné',home:'Petite maison, chambre partagée possible.'},
-  {id:8,img:'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80',region:'France',lieu:'Corse',pseudo:'EvaCorsica',age:'Eva, 40 ans',aff:'93%',desc:'Séjour en Corse avec plage et balades faciles. Organisation simple et flexible.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 8 et 12 ans',places:'1 adulte + 2 enfants',price:'650 €',dates:'22 - 29 août',link:'https://www.exemple-corse.fr',home:'Villa partagée, chambres séparées, voiture conseillée.'}
-];
-
-const ads = [...seedAds];
-let selected = null;
 
 function byId(id) {
   return document.getElementById(id);
@@ -94,102 +22,166 @@ function byId(id) {
 function openModal(id) {
   const modal = byId(id);
   if (!modal) {
-    console.error(`Modal introuvable : ${id}`);
+    console.error("Modal introuvable :", id);
     return;
   }
-  modal.classList.add('open');
+  modal.classList.add("open");
 }
 
 function closeModal(id) {
   const modal = byId(id);
   if (!modal) {
-    console.error(`Modal introuvable : ${id}`);
+    console.error("Modal introuvable :", id);
     return;
   }
-  modal.classList.remove('open');
+  modal.classList.remove("open");
 }
 
-function showToast(msg) {
-  const t = byId('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  window.setTimeout(() => t.classList.remove('show'), 2500);
+function showToast(message) {
+  const toast = byId("toast");
+  if (!toast) {
+    console.log(message);
+    return;
+  }
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2500);
 }
 
 function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>'"]/g, (char) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[char]));
+  return String(value ?? "").replace(/[&<>'"]/g, function(char) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "'": "&#39;",
+      '"': "&quot;"
+    }[char];
+  });
 }
 
+const seedAds = [
+  {
+    id: 1,
+    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    region: "Vendée",
+    lieu: "Les Sables-d’Olonne",
+    pseudo: "JulieSoleil",
+    aff: "95%",
+    desc: "Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.",
+    adults: "1 adulte déjà inscrit",
+    kids: "2 enfants : 7 et 10 ans",
+    places: "1 adulte + 1 à 2 enfants",
+    price: "450 €",
+    dates: "10 - 17 août",
+    link: "https://www.exemple-location-vendee.fr",
+    home: "Maison 3 chambres, 4 lits, jardin clos."
+  },
+  {
+    id: 2,
+    img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    region: "Côte d'Azur",
+    lieu: "Fréjus et environ",
+    pseudo: "CamilleFamily",
+    aff: "89%",
+    desc: "Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.",
+    adults: "1 adulte déjà inscrit",
+    kids: "1 enfant : 8 ans",
+    places: "1 adulte + 1 enfant",
+    price: "520 €",
+    dates: "1 - 15 juillet",
+    link: "Non renseigné",
+    home: "Appartement proche plage, canapé-lit disponible."
+  },
+  {
+    id: 3,
+    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80",
+    region: "Annecy et environ",
+    lieu: "Lac d’Annecy",
+    pseudo: "NinaMontagne",
+    aff: "84%",
+    desc: "Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.",
+    adults: "1 adulte déjà inscrit",
+    kids: "2 enfants : 6 et 12 ans",
+    places: "1 adulte + 2 enfants max",
+    price: "390 €",
+    dates: "20 - 27 juillet",
+    link: "https://www.exemple-chalet-annecy.fr",
+    home: "Chalet familial, chambres séparées, terrasse."
+  }
+];
+
+const ads = [...seedAds];
+let selected = null;
+
 function normalizeAnnonce(row, index = 0) {
-  const prix = row.prix ?? row.price ?? '';
-  const prixAffiche = prix === '' ? 'À discuter' : `${prix} €`.replace('€ €', '€');
+  const prix = row.prix ?? row.price ?? "";
+  const prixAffiche = prix === null || prix === "" ? "À discuter" : `${prix} €`.replace("€ €", "€");
+
   return {
     id: row.id ?? Date.now() + index,
-    img: row.img || row.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
-    region: row.region || 'Destination à préciser',
-    lieu: row.lieu || row.region || 'Séjour proposé',
-    pseudo: row.pseudo || 'Parent solo',
-    age: row.age || '',
-    aff: row.aff || 'Nouveau',
-    desc: row.description || row.desc || 'Annonce publiée depuis le site Co-Vacances.',
-    adults: row.participants || row.adults || 'À préciser',
-    kids: row.enfants || row.kids || 'À préciser',
-    places: row.places || row.places_restantes || 'À discuter',
+    img: row.img || row.image || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    region: row.region || "Destination à préciser",
+    lieu: row.lieu || row.region || "Séjour proposé",
+    pseudo: row.pseudo || "Parent solo",
+    aff: row.aff || "Nouveau",
+    desc: row.description || row.desc || "Annonce publiée depuis le site Co-Vacances.",
+    adults: row.participants || row.adults || "À préciser",
+    kids: row.enfants || row.kids || "À préciser",
+    places: row.places || "À discuter",
     price: prixAffiche,
-    dates: row.dates || 'Dates à préciser',
-    link: row.lien || row.link || 'Non renseigné',
-    home: row.hebergement || row.home || row.description || 'Conditions à préciser'
+    dates: row.dates || "Dates à préciser",
+    link: row.lien || row.link || "Non renseigné",
+    home: row.hebergement || row.home || row.description || "Conditions à préciser"
   };
 }
 
 function renderAds() {
-  const grid = byId('adsGrid');
+  const grid = byId("adsGrid");
   if (!grid) return;
 
-  grid.innerHTML = ads.map(a => `
-    <article class="ad" onclick="openDetail(${a.id})">
-      <div class="ad-img">
-        <img src="${escapeHTML(a.img)}" alt="${escapeHTML(a.region)}">
-        <span class="aff">💕 ${escapeHTML(a.aff)}</span>
-        <span class="price">${escapeHTML(a.price)}</span>
-      </div>
-      <div class="ad-body">
-        <h3>${escapeHTML(a.lieu)}</h3>
-        <p class="muted">📍 ${escapeHTML(a.region)} • 📅 ${escapeHTML(a.dates)}</p>
-        <p class="desc">${escapeHTML(a.desc)}</p>
-        <div class="facts">
-          <p><strong>Participants :</strong> ${escapeHTML(a.adults)}</p>
-          <p><strong>Enfants :</strong> ${escapeHTML(a.kids)}</p>
-          <p><strong>Places restantes :</strong> ${escapeHTML(a.places)}</p>
-          <p><strong>Prix :</strong> ${escapeHTML(a.price)}</p>
+  grid.innerHTML = ads.map(function(a) {
+    return `
+      <article class="ad" onclick="openDetail(${a.id})">
+        <div class="ad-img">
+          <img src="${escapeHTML(a.img)}" alt="${escapeHTML(a.region)}">
+          <span class="aff">💕 ${escapeHTML(a.aff)}</span>
+          <span class="price">${escapeHTML(a.price)}</span>
         </div>
-        <button class="btn primary" type="button">Voir le séjour</button>
-      </div>
-    </article>
-  `).join('');
+        <div class="ad-body">
+          <h3>${escapeHTML(a.lieu)}</h3>
+          <p class="muted">📍 ${escapeHTML(a.region)} • 📅 ${escapeHTML(a.dates)}</p>
+          <p class="desc">${escapeHTML(a.desc)}</p>
+          <div class="facts">
+            <p><strong>Participants :</strong> ${escapeHTML(a.adults)}</p>
+            <p><strong>Enfants :</strong> ${escapeHTML(a.kids)}</p>
+            <p><strong>Places restantes :</strong> ${escapeHTML(a.places)}</p>
+            <p><strong>Prix :</strong> ${escapeHTML(a.price)}</p>
+          </div>
+          <button class="btn primary" type="button">Voir le séjour</button>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 function openDetail(id) {
-  selected = ads.find(a => String(a.id) === String(id));
+  selected = ads.find(function(a) {
+    return String(a.id) === String(id);
+  });
+
   if (!selected) {
-    showToast('Annonce introuvable');
+    showToast("Annonce introuvable");
     return;
   }
 
-  byId('detailTitle').textContent = 'Annonce de ' + selected.pseudo;
-  byId('detailImage').src = selected.img;
-  byId('detailImage').alt = selected.region;
-  byId('detailAff').textContent = '💕 ' + selected.aff + " d’affinités";
-  byId('detailPlace').textContent = selected.lieu + ' — ' + selected.region;
-  byId('detailDesc').textContent = selected.desc;
-  byId('detailFacts').innerHTML = `
+  byId("detailTitle").textContent = "Annonce de " + selected.pseudo;
+  byId("detailImage").src = selected.img;
+  byId("detailImage").alt = selected.region;
+  byId("detailAff").textContent = "💕 " + selected.aff + " d’affinités";
+  byId("detailPlace").textContent = selected.lieu + " — " + selected.region;
+  byId("detailDesc").textContent = selected.desc;
+  byId("detailFacts").innerHTML = `
     <p><strong>Lien du lieu :</strong> ${escapeHTML(selected.link)}</p>
     <p><strong>Participants déjà enregistrés :</strong> ${escapeHTML(selected.adults)}</p>
     <p><strong>Nombre d’enfant et âge :</strong> ${escapeHTML(selected.kids)}</p>
@@ -198,24 +190,32 @@ function openDetail(id) {
     <p><strong>Prix / participation :</strong> ${escapeHTML(selected.price)}</p>
     <p><strong>Dates proposées :</strong> ${escapeHTML(selected.dates)}</p>
   `;
-  openModal('detailModal');
+
+  openModal("detailModal");
 }
 
 function openMessage(mode) {
   if (!selected) {
-    showToast('Sélectionne d’abord une annonce');
+    showToast("Sélectionne d’abord une annonce");
     return;
   }
-  const pseudo = byId('pseudoInput')?.value || 'Marie75';
-  closeModal('detailModal');
-  byId('messageTitle').textContent = mode === 'interest' ? 'Prendre contact avec la co-vacancière' : 'Poser une question';
-  byId('messageSubject').value = mode === 'interest'
+
+  const pseudo = byId("pseudoInput")?.value || "Marie75";
+  closeModal("detailModal");
+
+  byId("messageTitle").textContent = mode === "interest"
+    ? "Prendre contact avec la co-vacancière"
+    : "Poser une question";
+
+  byId("messageSubject").value = mode === "interest"
     ? `${pseudo} est intéressée pour vous accompagner en vacances !`
     : `${pseudo} veut vous poser une question`;
-  byId('messageBody').value = mode === 'interest'
+
+  byId("messageBody").value = mode === "interest"
     ? `Bonjour ${selected.pseudo},\n\nVotre annonce m’intéresse beaucoup. J’aimerais échanger avec vous pour voir si nos familles pourraient être compatibles pour ce séjour.\n\nÀ bientôt !`
     : `Bonjour ${selected.pseudo},\n\nJ’ai une question concernant votre annonce : `;
-  openModal('messageModal');
+
+  openModal("messageModal");
 }
 
 async function loadAdsFromSupabase() {
@@ -223,36 +223,99 @@ async function loadAdsFromSupabase() {
 
   const { data, error } = await db
     .from(TABLE_ANNONCES)
-    .select('*')
+    .select("*")
     .limit(50);
 
   if (error) {
-    console.warn('Chargement Supabase impossible :', error);
+    console.warn("Chargement Supabase impossible :", error);
     return;
   }
 
   if (Array.isArray(data) && data.length > 0) {
-    data.forEach((row, index) => {
+    data.forEach(function(row, index) {
       const normalized = normalizeAnnonce(row, index);
-      if (!ads.some(a => String(a.id) === String(normalized.id))) {
+      if (!ads.some(function(a) { return String(a.id) === String(normalized.id); })) {
         ads.unshift(normalized);
       }
     });
     renderAds();
   }
+}
+
+async function publierAnnonce() {
+  const lien = byId("annonceLien")?.value.trim() || "Non renseigné";
+  const region = byId("annonceRegion")?.value || "Autre";
+  const participants = byId("annonceParticipants")?.value || "À préciser";
+  const enfants = byId("annonceEnfants")?.value.trim() || "À préciser";
+  const places = byId("annoncePlaces")?.value || "À discuter";
+  const prixValue = byId("annoncePrix")?.value;
+  const prix = prixValue === "" ? null : Number(prixValue);
+  const description = byId("annonceDescription")?.value.trim() || "";
+
+  if (!description || description.length < 8) {
+    showToast("Ajoute une description un peu plus complète");
+    return;
+  }
+
+  if (prix !== null && Number.isNaN(prix)) {
+    showToast("Le prix doit être un nombre");
+    return;
+  }
+
+  if (!db) {
+    console.error("Supabase non initialisé");
+    showToast("Supabase non chargé");
+    return;
+  }
+
+  const nouvelleAnnonce = {
+    lien: lien,
+    region: region,
+    participants: participants,
+    enfants: enfants,
+    places: places,
+    prix: prix,
+    description: description
+  };
+
+  console.log("Annonce envoyée à Supabase :", nouvelleAnnonce);
+
+  const { data, error } = await db
+    .from(TABLE_ANNONCES)
+    .insert([nouvelleAnnonce])
+    .select();
+
+  if (error) {
+    console.error("Erreur Supabase complète :", JSON.stringify(error, null, 2));
+    showToast("Erreur lors de la publication");
+    return;
+  }
+
+  console.log("Annonce enregistrée :", data);
+
+  const annonceLocale = normalizeAnnonce({
+    ...nouvelleAnnonce,
+    id: data?.[0]?.id || Date.now(),
+    pseudo: byId("pseudoInput")?.value || "Parent solo",
+    lieu: region,
+    dates: "Dates à préciser",
+    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+    aff: "Nouveau",
+    hebergement: description
+  });
+
   ads.unshift(annonceLocale);
   renderAds();
 
-  showToast('Annonce publiée ✅');
-  closeModal('proposeModal');
+  showToast("Annonce publiée ✅");
+  closeModal("proposeModal");
 
-  byId('annonceLien').value = '';
-  byId('annonceEnfants').value = '';
-  byId('annoncePrix').value = '';
-  byId('annonceDescription').value = '';
+  byId("annonceLien").value = "";
+  byId("annonceEnfants").value = "";
+  byId("annoncePrix").value = "";
+  byId("annonceDescription").value = "";
 }
 
-// Important : les fonctions appelées par onclick doivent être globales.
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.openDetail = openDetail;
@@ -260,13 +323,13 @@ window.openMessage = openMessage;
 window.showToast = showToast;
 window.publierAnnonce = publierAnnonce;
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", function() {
   renderAds();
 
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('click', event => {
+  document.querySelectorAll(".modal").forEach(function(modal) {
+    modal.addEventListener("click", function(event) {
       if (event.target === modal) {
-        modal.classList.remove('open');
+        modal.classList.remove("open");
       }
     });
   });
@@ -274,26 +337,3 @@ window.addEventListener('DOMContentLoaded', () => {
   loadAdsFromSupabase();
 });
 </script>
-</body>
-</html>
-
-// Important : les fonctions appelées par onclick doivent être globales.
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.openDetail = openDetail;
-window.openMessage = openMessage;
-window.showToast = showToast;
-window.publierAnnonce = publierAnnonce;
-
-window.addEventListener('DOMContentLoaded', () => {
-  renderAds();
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('click', event => {
-      if (event.target === modal) modal.classList.remove('open');
-    });
-  });
-  loadAdsFromSupabase();
-});
-</script>
-</body>
-</html>
