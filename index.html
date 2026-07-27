@@ -240,69 +240,6 @@ async function loadAdsFromSupabase() {
     });
     renderAds();
   }
-async function publierAnnonce() {
-
-  const lien = byId('annonceLien')?.value.trim() || 'Non renseigné';
-  const region = byId('annonceRegion')?.value || 'Autre';
-  const participants = byId('annonceParticipants')?.value || 'À préciser';
-  const enfants = byId('annonceEnfants')?.value.trim() || 'À préciser';
-  const places = byId('annoncePlaces')?.value || 'À discuter';
-  const prixValue = byId('annoncePrix')?.value;
-  const prix = prixValue === '' ? null : Number(prixValue);
-  const description = byId('annonceDescription')?.value.trim() || '';
-
-  if (!description || description.length < 8) {
-    showToast('Ajoute une description un peu plus complète');
-    return;
-  }
-
-  if (prix !== null && Number.isNaN(prix)) {
-    showToast('Le prix doit être un nombre');
-    return;
-  }
-
-  if (!db) {
-    console.error('Supabase non initialisé');
-    showToast('Supabase non chargé');
-    return;
-  }
-
-  const nouvelleAnnonce = {
-    lien: lien,
-    region: region,
-    participants: participants,
-    enfants: enfants,
-    places: places,
-    prix: prix,
-    description: description
-  };
-
-  console.log('Annonce envoyée à Supabase :', nouvelleAnnonce);
-
-  const { data, error } = await db
-    .from('annonces')
-    .insert([nouvelleAnnonce])
-    .select();
-
-  if (error) {
-    console.error('Erreur Supabase complète :', JSON.stringify(error, null, 2));
-    showToast('Erreur lors de la publication');
-    return;
-  }
-
-  console.log('Annonce enregistrée :', data);
-
-  const annonceLocale = normalizeAnnonce({
-    ...nouvelleAnnonce,
-    id: data?.[0]?.id || Date.now(),
-    pseudo: byId('pseudoInput')?.value || 'Parent solo',
-    lieu: region,
-    dates: 'Dates à préciser',
-    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80',
-    aff: 'Nouveau',
-    hebergement: description
-  });
-
   ads.unshift(annonceLocale);
   renderAds();
 
@@ -315,6 +252,30 @@ async function publierAnnonce() {
   byId('annonceDescription').value = '';
 }
 
+// Important : les fonctions appelées par onclick doivent être globales.
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.openDetail = openDetail;
+window.openMessage = openMessage;
+window.showToast = showToast;
+window.publierAnnonce = publierAnnonce;
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderAds();
+
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', event => {
+      if (event.target === modal) {
+        modal.classList.remove('open');
+      }
+    });
+  });
+
+  loadAdsFromSupabase();
+});
+</script>
+</body>
+</html>
 
 // Important : les fonctions appelées par onclick doivent être globales.
 window.openModal = openModal;
