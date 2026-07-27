@@ -243,6 +243,7 @@ async function loadAdsFromSupabase() {
 }
 
 async function publierAnnonce() {
+
   const lien = byId('annonceLien')?.value.trim() || 'Non renseigné';
   const region = byId('annonceRegion')?.value || 'Autre';
   const participants = byId('annonceParticipants')?.value || 'À préciser';
@@ -250,7 +251,36 @@ async function publierAnnonce() {
   const places = byId('annoncePlaces')?.value || 'À discuter';
   const prixValue = byId('annoncePrix')?.value;
   const prix = prixValue === '' ? null : Number(prixValue);
-  const description = byId('annonceDescription')?.value.trim() || 'Annonce publiée depuis le site Co-Vacances.';
+  const description = byId('annonceDescription')?.value.trim() || 'Annonce publiée depuis le site Co‑Vacances.';
+
+  const nouvelleAnnonce = {
+    lien: lien,
+    region: region,
+    participants: participants,
+    enfants: enfants,
+    places: places,
+    prix: prix,
+    description: description
+  };
+
+  console.log("Annonce envoyée :", nouvelleAnnonce);
+
+  const { data, error } = await db
+    .from("annonces")
+    .insert([nouvelleAnnonce]);
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+    showToast("Erreur lors de la publication");
+    return;
+  }
+
+  showToast("Annonce publiée ✅");
+
+  closeModal("proposeModal");
+
+  await loadAdsFromSupabase();
+}
 
   if (!description || description.length < 8) {
     showToast('Ajoute une description un peu plus complète');
@@ -262,15 +292,33 @@ async function publierAnnonce() {
     return;
   }
 
-  const nouvelleAnnonce = {
-    lien,
-    region,
-    participants,
-    enfants,
-    places,
-    prix,
-    description
-  };
+const nouvelleAnnonce = {
+  lien: lien,
+
+  région: region,
+
+  ville: "",
+
+  date_debut: null,
+
+  date_fin: null,
+
+  prix: prix,
+
+  lien_hebergement: lien,
+
+  participant: 1,
+
+  enfants: enfants,
+
+  centres_interet: "",
+
+  places_restantes: 1,
+
+  description: description,
+
+  auteur: "Tatiana"
+};
 
   if (!db) {
     console.error('Supabase non initialisé');
