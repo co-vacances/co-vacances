@@ -240,8 +240,6 @@ async function loadAdsFromSupabase() {
     });
     renderAds();
   }
-}
-
 async function publierAnnonce() {
 
   const lien = byId('annonceLien')?.value.trim() || 'Non renseigné';
@@ -263,55 +261,40 @@ async function publierAnnonce() {
     return;
   }
 
-  const nouvelleAnnonce = {
-    lien,
-    region,
-    participants,
-    enfants,
-    places,
-    prix,
-    description
-  };
-
-  console.log("Annonce envoyée :", nouvelleAnnonce);
-
-  const { data, error } = await db
-    .from("annonces")
-    .insert([nouvelleAnnonce]);
-
-  if (error) {
-    console.error("Erreur Supabase :", error);
-    showToast("Erreur lors de la publication");
-    return;
-  }
-
-  showToast("Annonce publiée ✅");
-
-  closeModal("proposeModal");
-
-  await loadAdsFromSupabase();
-}
-
-
   if (!db) {
     console.error('Supabase non initialisé');
-    showToast('Supabase non chargé : annonce non enregistrée');
+    showToast('Supabase non chargé');
     return;
   }
 
-  const { error } = await db
-    .from(TABLE_ANNONCES)
-    .insert([nouvelleAnnonce]);
+  const nouvelleAnnonce = {
+    lien: lien,
+    region: region,
+    participants: participants,
+    enfants: enfants,
+    places: places,
+    prix: prix,
+    description: description
+  };
+
+  console.log('Annonce envoyée à Supabase :', nouvelleAnnonce);
+
+  const { data, error } = await db
+    .from('annonces')
+    .insert([nouvelleAnnonce])
+    .select();
 
   if (error) {
-    console.error('Erreur Supabase :', error);
-    showToast('Erreur Supabase : vérifie la console');
+    console.error('Erreur Supabase complète :', JSON.stringify(error, null, 2));
+    showToast('Erreur lors de la publication');
     return;
   }
+
+  console.log('Annonce enregistrée :', data);
 
   const annonceLocale = normalizeAnnonce({
     ...nouvelleAnnonce,
-    id: Date.now(),
+    id: data?.[0]?.id || Date.now(),
     pseudo: byId('pseudoInput')?.value || 'Parent solo',
     lieu: region,
     dates: 'Dates à préciser',
@@ -322,6 +305,7 @@ async function publierAnnonce() {
 
   ads.unshift(annonceLocale);
   renderAds();
+
   showToast('Annonce publiée ✅');
   closeModal('proposeModal');
 
@@ -330,6 +314,7 @@ async function publierAnnonce() {
   byId('annoncePrix').value = '';
   byId('annonceDescription').value = '';
 }
+
 
 // Important : les fonctions appelées par onclick doivent être globales.
 window.openModal = openModal;
