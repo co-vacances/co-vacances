@@ -421,16 +421,33 @@ async function publierAnnonce() {
 }
 async function creerCompte() {
 
-  const identifiant =
-    byId("signupIdentifiant")?.value.trim();
+  const email =
+    byId("signupEmail")?.value.trim();
 
   const password =
     byId("signupPassword")?.value.trim();
 
-  if (!identifiant) {
-    showToast("Choisis un identifiant");
+  const confirmPassword =
+    byId("signupPasswordConfirm")?.value.trim();
+
+  if (!email) {
+    showToast("Saisis une adresse email");
     return;
   }
+
+  if (!password) {
+    showToast("Choisis un mot de passe");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showToast("Les mots de passe ne correspondent pas");
+    return;
+  }
+
+  showToast("Validation OK ✅");
+
+}
 
   if (!password) {
     showToast("Choisis un mot de passe");
