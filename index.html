@@ -445,22 +445,14 @@ async function creerCompte() {
     return;
   }
 
-  showToast("Validation OK ✅");
-
-}
-
-  if (!password) {
-    showToast("Choisis un mot de passe");
-    return;
-  }
-
   const { data, error } = await db
     .from("profils")
     .insert([
       {
-        identifiant: identifiant,
+        identifiant: email,
+        email: email,
         password: password,
-        pseudo: identifiant
+        pseudo: email
       }
     ])
     .select();
