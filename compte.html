@@ -1,151 +1,258 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mon compte - Co‑Vacances</title>
-
-<style>
-
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#FFFDF8;
-  color:#1E293B;
-}
-
-.container{
-  width:min(1100px,92%);
-  margin:auto;
-}
-
-.header{
-  background:white;
-  border-bottom:1px solid #E2E8F0;
-  padding:20px;
-}
-
-.header h1{
-  margin:0;
-  color:#3BAFDA;
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:250px 1fr;
-  gap:30px;
-  margin-top:30px;
-}
-
-.menu{
-  background:white;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-
-.menu a{
-  display:block;
-  padding:12px;
-  color:#1E293B;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-.menu a:hover{
-  color:#3BAFDA;
-}
-
-.card{
-  background:white;
-  border-radius:20px;
-  padding:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-  margin-bottom:25px;
-}
-
-h2{
-  margin-top:0;
-}
-
-.form-field{
-  margin-bottom:15px;
-}
-
-.form-field label{
-  display:block;
-  margin-bottom:5px;
-  font-weight:bold;
-}
-
-.form-field input,
-.form-field textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #E2E8F0;
-  border-radius:10px;
-}
-
-.avatar-list{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-.avatar{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:#E8F8FC;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:28px;
-  cursor:pointer;
-}
-
-.btn{
-  background:#3BAFDA;
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-.table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-.table th,
-.table td{
-  padding:12px;
-  border-bottom:1px solid #E2E8F0;
-}
-
-.action{
-  cursor:pointer;
-  margin-right:10px;
-}
-
-.status-active{
-  color:green;
-  font-weight:bold;
-}
-
-.status-pause{
-  color:orange;
-  font-weight:bold;
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maquette interactive - Co-Vacances MVP</title>
+  <style>
+    :root{
+      --lagoon:#3BAFDA;--lagoon-dark:#2c95bd;--coral:#FF7A59;--coral-dark:#ef6340;
+      --sun:#FFC857;--sand:#FFFDF8;--soft:#64748B;--text:#1E293B;--mint:#DFF7F8;
+      --rose:#FFEAE3;--yellow:#FFF3D6;--lav:#F0ECFF;--border:#E2E8F0;--shadow:0 18px 45px rgba(15,23,42,.12);
+      --green:#16a34a;--orange:#f97316;--red:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--sand);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1180px,92%);margin:auto}
+    .btn{border:0;border-radius:18px;padding:14px 22px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 10px 22px rgba(15,23,42,.12)}
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:var(--lagoon);color:white}.primary:hover{background:var(--lagoon-dark)}
+    .secondary{background:var(--coral);color:white}.secondary:hover{background:var(--coral-dark)}
+    .ghost{background:white;color:var(--text);border:1px solid var(--border)}
+    .danger{background:var(--red);color:white}.success{background:var(--green);color:white}.small{padding:9px 13px;border-radius:12px;font-size:13px;box-shadow:none}
+    .topbar{position:sticky;top:0;z-index:40;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,232,240,.7)}
+    .nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:12px}.logo{height:52px;width:52px;border-radius:18px;background:white;display:grid;place-items:center;font-size:27px;box-shadow:var(--shadow)}
+    .brand h1{font-size:31px;margin:0;letter-spacing:-1px}.brand h1 span:first-child{color:var(--lagoon)}.brand h1 span:last-child{color:var(--coral)}.brand small{color:var(--soft);font-weight:700}
+    .nav-links{display:flex;gap:26px;color:#334155;font-size:14px;font-weight:800}.nav-actions{display:flex;gap:10px;align-items:center;position:relative}
+    .account-menu{position:absolute;right:0;top:58px;background:white;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:10px;width:220px;display:none}
+    .account-menu.open{display:block}.account-menu button{display:block;width:100%;text-align:left;background:white;border:0;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}.account-menu button:hover{background:#F8FAFC}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#E8F8FC 0%,#FFFDF8 45%,#FFEFE8 100%);padding:70px 0 90px}.blob{position:absolute;border-radius:999px;filter:blur(40px);opacity:.65}.b1{right:-90px;top:-80px;width:380px;height:380px;background:var(--sun)}.b2{left:-90px;bottom:0;width:300px;height:300px;background:var(--lagoon);opacity:.25}
+    .hero-grid{position:relative;display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}.pill{display:inline-flex;gap:8px;background:white;border:1px solid #f7ddd2;color:var(--coral);padding:11px 16px;border-radius:999px;font-weight:900;box-shadow:0 8px 18px rgba(15,23,42,.06)}
+    h2.hero-title{font-size:clamp(42px,6.5vw,76px);line-height:.95;letter-spacing:-3px;margin:24px 0 18px}.hero-title .accent{color:var(--coral)}.lead{font-size:20px;line-height:1.55;color:#475569;max-width:610px}.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+    .hero-card{background:white;border:8px solid white;border-radius:42px;overflow:hidden;box-shadow:var(--shadow);position:relative}.hero-photo{height:410px;background:linear-gradient(135deg,#DFF7F8,#FFEAE3,#FFF3D6);display:grid;place-items:center;text-align:center;padding:35px}.hero-photo .emoji{font-size:88px}.hero-photo h3{font-size:34px;margin:15px 0 8px}.muted{color:var(--soft)}
+    section{padding:70px 0}.section-title{font-size:38px;margin:0 0 14px;letter-spacing:-1px}.section-sub{color:var(--soft);font-size:18px;margin:0 0 30px}
+    .ads-section{background:linear-gradient(180deg,#fff,#E8F8FC80)}.ads-head{display:flex;justify-content:space-between;gap:20px;align-items:end}.badge{background:var(--rose);color:var(--coral);font-weight:900;border-radius:999px;padding:12px 18px;display:inline-block}.ads-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
+    .ad{background:white;border-radius:30px;overflow:hidden;border:1px solid #F1F5F9;box-shadow:0 14px 30px rgba(15,23,42,.08);cursor:pointer;transition:.2s}.ad:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.ad-img{height:170px;position:relative;background:linear-gradient(135deg,#E8F8FC,#FFEAE3);display:grid;place-items:center;font-size:64px}.aff{position:absolute;top:12px;left:12px;background:white;color:var(--coral);border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.price{position:absolute;bottom:12px;right:12px;background:#1E293Bd8;color:white;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:900}.ad-body{padding:17px}.ad h3{font-size:20px;margin:0 0 4px}.desc{font-size:14px;color:#475569;line-height:1.43;min-height:55px}.facts{display:grid;gap:7px;font-size:13px;color:#475569}.facts strong{color:var(--text)}.ad .btn{width:100%;margin-top:15px;padding:12px;border-radius:16px}
+    .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.64);z-index:100;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.modal.open{display:flex}.modal-content{width:min(920px,96vw);max-height:90vh;overflow:auto;background:white;border-radius:30px;box-shadow:0 30px 80px rgba(0,0,0,.3)}.modal-head{position:sticky;top:0;background:white;border-bottom:1px solid var(--border);padding:22px 26px;display:flex;justify-content:space-between;align-items:center;z-index:2}.modal-head h3{margin:0;font-size:25px}.close{border:0;background:#F1F5F9;border-radius:50%;width:42px;height:42px;font-size:24px;cursor:pointer}.modal-body{padding:26px}.modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}
+    .tabs{display:flex;gap:10px;background:#F8FAFC;border-radius:20px;padding:8px;margin-bottom:20px}.tab{flex:1;border:0;background:transparent;padding:13px;border-radius:14px;font-weight:900;cursor:pointer;color:#475569}.tab.active{background:white;color:var(--lagoon);box-shadow:0 8px 18px rgba(15,23,42,.08)}.tab-panel{display:none}.tab-panel.active{display:block}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}.form-field label{font-weight:900}.form-field input,.form-field select,.form-field textarea{border:1px solid var(--border);border-radius:16px;padding:13px;outline:0;font:inherit;background:white}.form-field textarea{min-height:110px;resize:vertical}.password-line{display:flex;gap:8px}.password-line input{flex:1}.eye{border:1px solid var(--border);background:#F8FAFC;border-radius:14px;width:48px;cursor:pointer}.link-btn{background:transparent;border:0;color:var(--lagoon);font-weight:900;cursor:pointer;padding:8px 0}
+    .account-layout{display:grid;grid-template-columns:230px 1fr;gap:20px}.side{background:#F8FAFC;border-radius:22px;padding:14px}.side button{width:100%;display:block;text-align:left;border:0;background:transparent;padding:14px;border-radius:14px;font-weight:900;cursor:pointer;color:#334155}.side button.active,.side button:hover{background:white;color:var(--coral);box-shadow:0 7px 17px rgba(15,23,42,.06)}.account-panel{display:none}.account-panel.active{display:block}.avatar-list{display:flex;gap:10px;flex-wrap:wrap}.avatar{width:54px;height:54px;border-radius:18px;background:#E8F8FC;border:2px solid transparent;display:grid;place-items:center;font-size:27px;cursor:pointer}.avatar.selected{border-color:var(--coral);background:var(--rose)}
+    .my-ad{border:1px solid var(--border);border-radius:22px;padding:16px;margin:12px 0;display:flex;justify-content:space-between;gap:14px;align-items:center}.status{font-weight:900;border-radius:999px;padding:7px 10px;font-size:12px}.active-status{background:#dcfce7;color:#166534}.paused-status{background:#ffedd5;color:#9a3412}.message-card{border:1px solid var(--border);border-radius:22px;padding:16px;margin:12px 0;background:#FFFDF8}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:white;padding:14px 20px;border-radius:999px;box-shadow:var(--shadow);display:none;z-index:200;font-weight:800}.toast.show{display:block}
+    .email-preview{background:#F8FAFC;border:1px dashed var(--border);border-radius:18px;padding:16px;margin-top:15px}.email-preview strong{color:var(--lagoon)}
+    @media(max-width:900px){.hero-grid,.account-layout{grid-template-columns:1fr}.ads-grid{grid-template-columns:1fr 1fr}.nav-links{display:none}.form-grid{grid-template-columns:1fr}}
+    @media(max-width:620px){.ads-grid{grid-template-columns:1fr}.nav{height:auto;padding:14px 0;align-items:flex-start;flex-direction:column}.nav-actions{width:100%;flex-wrap:wrap}.nav-actions .btn{flex:1}.modal-actions{flex-direction:column}.modal-actions .btn{width:100%}}
+  </style>
 </head>
-
 <body>
+  <div class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#">
+        <div class="logo">🌊</div>
+        <div><h1><span>Co</span><span>-Vacances</span></h1><small>Vacances partagées entre parents solos</small></div>
+      </a>
+      <div class="nav-links"><a href="#concept">Le concept</a><a href="#annonces">Annonces</a><a href="#confiance">Confiance</a></div>
+      <div class="nav-actions" id="navActions">
+        <button class="btn ghost" id="loginBtn" onclick="openAuthModal('login')">Connexion</button>
+        <button class="btn secondary" id="signupBtn" onclick="openAuthModal('signup')">Inscription</button>
+        <button class="btn ghost" id="accountBtn" style="display:none" onclick="toggleAccountMenu()">👤 <span id="accountName">Mon compte</span> ▼</button>
+        <div class="account-menu" id="accountMenu">
+          <button onclick="openAccountModal('profile')">👤 Mon profil</button>
+          <button onclick="openAccountModal('ads')">📢 Mes annonces</button>
+          <button onclick="openAccountModal('messages')">💬 Messages</button>
+          <button onclick="logoutUser()">🚪 Déconnexion</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="header">
+  <header class="hero">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="container hero-grid">
+      <div>
+        <div class="pill">🤝 Solidarité • ☀️ Vacances • 💛 Confiance</div>
+        <h2 class="hero-title">Vous êtes maman solo ?<br><span class="accent">Ne partez plus seule.</span></h2>
+        <p class="lead">Une maquette interactive du parcours connecté : création de compte, connexion, profil, publication protégée et prise de contact.</p>
+        <div class="hero-actions">
+          <button class="btn primary" onclick="document.getElementById('annonces').scrollIntoView({behavior:'smooth'})">🔎 Chercher une annonce</button>
+          <button class="btn secondary" onclick="tryOpenProposal()">Proposer un séjour +</button>
+        </div>
+      </div>
+      <div class="hero-card"><div class="hero-photo"><div><div class="emoji">🏖️👩‍👧‍👦</div><h3>Un MVP plus sécurisé.</h3><p class="muted">La publication et les contacts sont réservés aux membres connectés.</p></div></div></div>
+    </div>
+  </header>
+
+  <section id="annonces" class="ads-section">
     <div class="container">
-        <h1>👤 Mon compte
+      <div class="ads-head"><div><h2 class="section-title">Annonces proposées</h2><p class="section-sub">Les visiteurs peuvent consulter. Les actions sensibles demandent une connexion.</p></div><span class="badge">💕 Affinités & confiance</span></div>
+      <div class="ads-grid" id="adsGrid"></div>
+    </div>
+  </section>
+
+  <section id="confiance">
+    <div class="container"><h2 class="section-title">Parcours cible MVP</h2><p class="section-sub">Créer un compte, se connecter, gérer son profil, publier et contacter en toute confiance.</p></div>
+  </section>
+
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>🌊 Espace membre Co‑Vacances</h3><button class="close" onclick="closeModal('authModal')">×</button></div>
+      <div class="modal-body">
+        <div class="tabs">
+          <button id="loginTab" class="tab active" onclick="switchAuthTab('login')">Connexion</button>
+          <button id="signupTab" class="tab" onclick="switchAuthTab('signup')">Créer un compte</button>
+        </div>
+        <div id="loginPanel" class="tab-panel active">
+          <h2>Bienvenue sur Co‑Vacances 🌊</h2>
+          <div class="form-field"><label>Adresse mail</label><input id="loginEmail" type="email" placeholder="votre@email.com"></div>
+          <div class="form-field"><label>Mot de passe</label><div class="password-line"><input id="loginPassword" type="password" placeholder="********"><button class="eye" onclick="togglePassword('loginPassword')">👁</button></div></div>
+          <button class="link-btn" onclick="openForgotPanel()">Mot de passe oublié ?</button>
+          <div class="modal-actions"><button class="btn primary" onclick="loginUser()">Se connecter</button></div>
+        </div>
+        <div id="signupPanel" class="tab-panel">
+          <h2>Rejoignez Co‑Vacances ☀️</h2>
+          <div class="form-field"><label>Adresse email</label><input id="signupEmail" type="email" placeholder="votre@email.com"></div>
+          <div class="form-grid">
+            <div class="form-field"><label>Mot de passe</label><div class="password-line"><input id="signupPassword" type="password" placeholder="********"><button class="eye" onclick="togglePassword('signupPassword')">👁</button></div></div>
+            <div class="form-field"><label>Confirmer le mot de passe</label><div class="password-line"><input id="signupPasswordConfirm" type="password" placeholder="********"><button class="eye" onclick="togglePassword('signupPasswordConfirm')">👁</button></div></div>
+          </div>
+          <div class="email-preview"><strong>Email de confirmation simulé :</strong><br>Votre compte Co‑Vacances a bien été créé. Votre identifiant est votre adresse mail. Lien vers le site inclus.</div>
+          <div class="modal-actions"><button class="btn secondary" onclick="signupUser()">Créer mon compte</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="forgotModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>🔐 Mot de passe oublié</h3><button class="close" onclick="closeModal('forgotModal')">×</button></div>
+      <div class="modal-body">
+        <p class="muted">Saisissez votre adresse mail. Un email de réinitialisation sera simulé dans cette maquette.</p>
+        <div class="form-field"><label>Adresse email</label><input id="forgotEmail" type="email" placeholder="votre@email.com"></div>
+        <div id="resetEmailPreview" class="email-preview" style="display:none"><strong>Email simulé envoyé :</strong><br>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le lien de réinitialisation.</div>
+        <div class="modal-actions"><button class="btn ghost" onclick="closeModal('forgotModal')">Annuler</button><button class="btn primary" onclick="sendResetEmail()">Envoyer</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resetModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>Choisir un nouveau mot de passe</h3><button class="close" onclick="closeModal('resetModal')">×</button></div>
+      <div class="modal-body">
+        <div class="form-field"><label>Nouveau mot de passe</label><div class="password-line"><input id="newPassword" type="password"><button class="eye" onclick="togglePassword('newPassword')">👁</button></div></div>
+        <div class="form-field"><label>Confirmation</label><div class="password-line"><input id="newPasswordConfirm" type="password"><button class="eye" onclick="togglePassword('newPasswordConfirm')">👁</button></div></div>
+        <div class="email-preview"><strong>Email de confirmation simulé :</strong><br>Votre nouveau mot de passe a bien été enregistré.</div>
+        <div class="modal-actions"><button class="btn primary" onclick="validateNewPassword()">Valider</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="requiredLoginModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>🔒 Connexion requise</h3><button class="close" onclick="closeModal('requiredLoginModal')">×</button></div>
+      <div class="modal-body"><p class="lead">Vous devez créer un compte ou vous connecter pour publier une annonce.</p><div class="modal-actions"><button class="btn ghost" onclick="openAuthModal('login');closeModal('requiredLoginModal')">Se connecter</button><button class="btn secondary" onclick="openAuthModal('signup');closeModal('requiredLoginModal')">Créer un compte</button></div></div>
+    </div>
+  </div>
+
+  <div id="proposalModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>🏡 Proposer un séjour</h3><button class="close" onclick="closeModal('proposalModal')">×</button></div>
+      <div class="modal-body">
+        <div class="form-grid"><div class="form-field"><label>Région</label><input id="propRegion" placeholder="Vendée"></div><div class="form-field"><label>Prix</label><input id="propPrice" placeholder="450 €"></div></div>
+        <div class="form-field"><label>Description</label><textarea id="propDesc" placeholder="Décrivez votre séjour..."></textarea></div>
+        <div class="modal-actions"><button class="btn secondary" onclick="publishMockAd()">Publier</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="accountModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3>👤 Mon compte</h3><button class="close" onclick="closeModal('accountModal')">×</button></div>
+      <div class="modal-body account-layout">
+        <div class="side"><button id="profileSide" class="active" onclick="switchAccountPanel('profile')">👤 Mon profil</button><button id="adsSide" onclick="switchAccountPanel('ads')">📢 Mes annonces</button><button id="messagesSide" onclick="switchAccountPanel('messages')">💬 Messages</button><button onclick="logoutUser()">🚪 Déconnexion</button></div>
+        <div>
+          <div id="profilePanel" class="account-panel active">
+            <h2>Mon profil</h2>
+            <p class="muted">Informations simples et utiles pour inspirer confiance.</p>
+            <div class="form-field"><label>Avatar</label><div class="avatar-list" id="avatarList"><div class="avatar selected" onclick="selectAvatar(this)">🌴</div><div class="avatar" onclick="selectAvatar(this)">🌊</div><div class="avatar" onclick="selectAvatar(this)">🏖️</div><div class="avatar" onclick="selectAvatar(this)">☀️</div><div class="avatar" onclick="selectAvatar(this)">🐚</div><div class="avatar" onclick="selectAvatar(this)">🌸</div></div></div>
+            <div class="form-grid"><div class="form-field"><label>Prénom</label><input id="profileFirstName" placeholder="Tatiana"></div><div class="form-field"><label>Nombre d'enfants</label><input id="profileKids" placeholder="1"></div></div>
+            <div class="form-field"><label>Âge des enfants</label><input id="profileKidsAge" placeholder="8 ans"></div>
+            <div class="form-field"><label>Style de vacances</label><input id="profileStyle" placeholder="Plage, nature, activités enfants..."></div>
+            <div class="form-field"><label>Description</label><textarea id="profileDesc" placeholder="Une petite description de votre famille et de vos attentes..."></textarea></div>
+            <button class="btn primary" onclick="saveProfile()">Enregistrer</button>
+          </div>
+          <div id="adsPanel" class="account-panel"><h2>Mes annonces</h2><div id="myAdsList"></div></div>
+          <div id="messagesPanel" class="account-panel"><h2>Messages</h2><div id="messagesList"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3 id="detailTitle">Détail annonce</h3><button class="close" onclick="closeModal('detailModal')">×</button></div>
+      <div class="modal-body"><p class="badge" id="detailAff"></p><h2 id="detailPlace"></h2><p id="detailDesc" class="lead"></p><div id="detailFacts" class="facts"></div><div class="modal-actions"><button class="btn secondary" onclick="tryContact()">Ça m'intéresse</button><button class="btn ghost" onclick="tryContact('question')">Poser une question</button></div></div>
+    </div>
+  </div>
+
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-head"><h3 id="contactTitle">Contacter</h3><button class="close" onclick="closeModal('contactModal')">×</button></div>
+      <div class="modal-body"><div class="form-field"><label>Objet</label><input id="contactSubject" value="Je suis intéressée par votre séjour"></div><div class="form-field"><label>Message</label><textarea id="contactMessage">Bonjour,
+
+Votre annonce m'intéresse beaucoup. J'aimerais échanger avec vous sur l'organisation du séjour.
+
+À bientôt.</textarea></div><div class="email-preview"><strong>Simulation :</strong> le message sera envoyé au publieur de l'annonce.</div><div class="modal-actions"><button class="btn ghost" onclick="closeModal('contactModal')">Annuler</button><button class="btn primary" onclick="sendContactMessage()">Envoyer</button></div></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let currentUser = null;
+    let selectedAd = null;
+    let myAds = [
+      {id:101, region:'Vendée', dates:'Août 2026', status:'ACTIVE'},
+      {id:102, region:'Corse', dates:'Juillet 2026', status:'PAUSE'}
+    ];
+    const ads = [
+      {id:1,emoji:'🏖️',region:'Vendée',lieu:'Les Sables-d’Olonne',pseudo:'JulieSoleil',aff:'95%',desc:'Semaine simple et joyeuse : plage, balades, repas partagés et enfants qui se font des copains.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 7 et 10 ans',places:'1 adulte + 1 à 2 enfants',price:'450 €',dates:'10 - 17 août'},
+      {id:2,emoji:'🌊',region:"Côte d'Azur",lieu:'Fréjus et environ',pseudo:'CamilleFamily',aff:'89%',desc:'Séjour détente avec piscine, plage et sorties enfants. Ambiance bienveillante et organisée.',adults:'1 adulte déjà inscrit',kids:'1 enfant : 8 ans',places:'1 adulte + 1 enfant',price:'520 €',dates:'1 - 15 juillet'},
+      {id:3,emoji:'⛰️',region:'Annecy et environ',lieu:'Lac d’Annecy',pseudo:'NinaMontagne',aff:'84%',desc:'Vacances nature : baignade, pique-nique et petites randonnées accessibles aux enfants.',adults:'1 adulte déjà inscrit',kids:'2 enfants : 6 et 12 ans',places:'1 adulte + 2 enfants max',price:'390 €',dates:'20 - 27 juillet'}
+    ];
+    function byId(id){return document.getElementById(id)}
+    function openModal(id){byId(id).classList.add('open')}
+    function closeModal(id){byId(id).classList.remove('open')}
+    function showToast(msg){const t=byId('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+    function openAuthModal(tab){switchAuthTab(tab);openModal('authModal')}
+    function switchAuthTab(tab){byId('loginTab').classList.toggle('active',tab==='login');byId('signupTab').classList.toggle('active',tab==='signup');byId('loginPanel').classList.toggle('active',tab==='login');byId('signupPanel').classList.toggle('active',tab==='signup')}
+    function togglePassword(id){const input=byId(id);input.type=input.type==='password'?'text':'password'}
+    function openForgotPanel(){closeModal('authModal');openModal('forgotModal')}
+    function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
+    function signupUser(){const email=byId('signupEmail').value.trim();const p=byId('signupPassword').value;const c=byId('signupPasswordConfirm').value;if(!isEmail(email)){showToast('Adresse email obligatoire et valide');return}if(!p||p.length<4){showToast('Mot de passe obligatoire');return}if(p!==c){showToast('Les mots de passe ne correspondent pas');return}currentUser={email,firstName:email.split('@')[0]};updateHeader();closeModal('authModal');showToast('Compte créé ✅ Email de confirmation simulé')}
+    function loginUser(){const email=byId('loginEmail').value.trim();const p=byId('loginPassword').value;if(!isEmail(email)||!p){showToast('Email et mot de passe obligatoires');return}currentUser={email,firstName:email.split('@')[0]};updateHeader();closeModal('authModal');showToast('Connexion réussie ✅')}
+    function sendResetEmail(){const email=byId('forgotEmail').value.trim();if(!isEmail(email)){showToast('Saisis une adresse email valide');return}byId('resetEmailPreview').style.display='block';showToast('Email de réinitialisation simulé ✅');setTimeout(()=>{closeModal('forgotModal');openModal('resetModal')},900)}
+    function validateNewPassword(){const p=byId('newPassword').value;const c=byId('newPasswordConfirm').value;if(!p||p!==c){showToast('Vérifie les mots de passe');return}closeModal('resetModal');showToast('Nouveau mot de passe enregistré ✅ Email simulé envoyé')}
+    function updateHeader(){byId('loginBtn').style.display=currentUser?'none':'inline-block';byId('signupBtn').style.display=currentUser?'none':'inline-block';byId('accountBtn').style.display=currentUser?'inline-block':'none';byId('accountName').textContent=currentUser?currentUser.firstName:'Mon compte'}
+    function toggleAccountMenu(){byId('accountMenu').classList.toggle('open')}
+    function logoutUser(){currentUser=null;updateHeader();byId('accountMenu').classList.remove('open');showToast('Déconnexion réussie')}
+    function tryOpenProposal(){if(!currentUser){openModal('requiredLoginModal');return}openModal('proposalModal')}
+    function publishMockAd(){myAds.unshift({id:Date.now(),region:byId('propRegion').value||'Nouvelle destination',dates:'Dates à préciser',status:'ACTIVE'});closeModal('proposalModal');showToast('Annonce publiée dans la maquette ✅')}
+    function renderAds(){byId('adsGrid').innerHTML=ads.map(a=>`<article class="ad" onclick="openDetail(${a.id})"><div class="ad-img"><span>${a.emoji}</span><span class="aff">💕 ${a.aff}</span><span class="price">${a.price}</span></div><div class="ad-body"><h3>${a.lieu}</h3><p class="muted">📍 ${a.region} • 📅 ${a.dates}</p><p class="desc">${a.desc}</p><div class="facts"><p><strong>Participants :</strong> ${a.adults}</p><p><strong>Enfants :</strong> ${a.kids}</p><p><strong>Places restantes :</strong> ${a.places}</p></div><button class="btn primary">Voir le séjour</button></div></article>`).join('')}
+    function openDetail(id){selectedAd=ads.find(a=>a.id===id);byId('detailTitle').textContent='Annonce de '+selectedAd.pseudo;byId('detailAff').textContent='💕 '+selectedAd.aff+' d’affinités';byId('detailPlace').textContent=selectedAd.lieu+' — '+selectedAd.region;byId('detailDesc').textContent=selectedAd.desc;byId('detailFacts').innerHTML=`<p><strong>Participants :</strong> ${selectedAd.adults}</p><p><strong>Enfants :</strong> ${selectedAd.kids}</p><p><strong>Places restantes :</strong> ${selectedAd.places}</p><p><strong>Prix :</strong> ${selectedAd.price}</p><p><strong>Dates :</strong> ${selectedAd.dates}</p>`;openModal('detailModal')}
+    function tryContact(mode){if(!currentUser){closeModal('detailModal');openModal('requiredLoginModal');return}byId('contactTitle').textContent='Contacter '+selectedAd.pseudo;byId('contactSubject').value=mode==='question'?'Question sur votre annonce':'Je suis intéressée par votre séjour';closeModal('detailModal');openModal('contactModal')}
+    function sendContactMessage(){closeModal('contactModal');showToast('Votre message a été envoyé ✅')}
+    function openAccountModal(panel){byId('accountMenu').classList.remove('open');switchAccountPanel(panel);renderMyAds();renderMessages();openModal('accountModal')}
+    function switchAccountPanel(panel){['profile','ads','messages'].forEach(p=>{byId(p+'Panel').classList.toggle('active',p===panel);byId(p+'Side').classList.toggle('active',p===panel)})}
+    function selectAvatar(el){document.querySelectorAll('.avatar').forEach(a=>a.classList.remove('selected'));el.classList.add('selected')}
+    function saveProfile(){showToast('Profil enregistré ✅')}
+    function renderMyAds(){byId('myAdsList').innerHTML=myAds.map(a=>`<div class="my-ad"><div><strong>📍 ${a.region}</strong><br><span class="muted">${a.dates}</span><br><span class="status ${a.status==='ACTIVE'?'active-status':'paused-status'}">${a.status==='ACTIVE'?'ACTIVE':'EN PAUSE'}</span></div><div><button class="btn ghost small" onclick="showToast('Modification simulée')">Modifier</button> <button class="btn ghost small" onclick="toggleAdStatus(${a.id})">${a.status==='ACTIVE'?'Pause':'Réactiver'}</button> <button class="btn danger small" onclick="deleteAd(${a.id})">Supprimer</button></div></div>`).join('')}
+    function toggleAdStatus(id){const a=myAds.find(x=>x.id===id);a.status=a.status==='ACTIVE'?'PAUSE':'ACTIVE';renderMyAds();showToast('Statut mis à jour')}
+    function deleteAd(id){myAds=myAds.filter(a=>a.id!==id);renderMyAds();showToast('Annonce supprimée')}
+    function renderMessages(){byId('messagesList').innerHTML=`<div class="message-card"><strong>JulieSoleil</strong><br><span class="muted">Objet : Intéressée par votre séjour</span><p>Bonjour, votre annonce m'intéresse beaucoup...</p><button class="btn primary small">Répondre</button></div>`}
+    document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+    renderAds();
+  </script>
+</body>
+</html>
