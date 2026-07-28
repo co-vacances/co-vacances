@@ -419,7 +419,79 @@ async function publierAnnonce() {
   byId("annoncePrix").value = "";
   byId("annonceDescription").value = "";
 }
+async function creerCompte() {
 
+  const email =
+    byId("signupEmail")?.value.trim();
+
+  const password =
+    byId("signupPassword")?.value.trim();
+
+  const confirmPassword =
+    byId("signupPasswordConfirm")?.value.trim();
+
+  if (!email) {
+    showToast("Saisis une adresse email");
+    return;
+  }
+
+  if (!password) {
+    showToast("Choisis un mot de passe");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showToast("Les mots de passe ne correspondent pas");
+    return;
+  }
+
+  showToast("Validation OK ✅");
+
+}
+
+  if (!password) {
+    showToast("Choisis un mot de passe");
+    return;
+  }
+
+  const { data, error } = await db
+    .from("profils")
+    .insert([
+      {
+        identifiant: identifiant,
+        password: password,
+        pseudo: identifiant
+      }
+    ])
+    .select();
+
+  if (error) {
+    console.error(
+      "Erreur création compte :",
+      error
+    );
+
+    showToast(
+      "Erreur création compte"
+    );
+
+    return;
+  }
+
+  console.log(
+    "Compte créé :",
+    data
+  );
+
+  showToast(
+    "Compte créé ✅"
+  );
+
+  closeModal(
+    "loginModal"
+  );
+
+}
   
 window.openModal = openModal;
 window.closeModal = closeModal;
