@@ -489,7 +489,55 @@ async function creerCompte() {
 }
 async function connexionCompte() {
 
-  alert("Je suis dans connexionCompte ✅");
+  const email =
+    document.querySelector(
+      ".login-card.blue-bg input[type='text'], .login-card.blue-bg input[type='email']"
+    )?.value.trim();
+
+  const password =
+    document.querySelector(
+      ".login-card.blue-bg input[type='password']"
+    )?.value.trim();
+
+  const { data, error } = await db
+    .from("profils")
+    .select("*")
+    .eq("identifiant", email)
+    .eq("password", password)
+    .maybeSingle();
+
+  if (error) {
+
+    console.error(error);
+
+    showToast(
+      "Erreur connexion"
+    );
+
+    return;
+  }
+
+  if (!data) {
+
+    showToast(
+      "Email ou mot de passe incorrect"
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    "userEmail",
+    email
+  );
+
+  showToast(
+    "Connexion réussie ✅"
+  );
+
+  closeModal(
+    "loginModal"
+  );
 
 }
   
