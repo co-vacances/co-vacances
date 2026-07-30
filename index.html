@@ -487,6 +487,11 @@ async function creerCompte() {
   );
 
 }
+async function connexionCompte() {
+
+  showToast("Connexion OK ✅");
+
+}
   
 window.openModal = openModal;
 window.closeModal = closeModal;
@@ -495,6 +500,7 @@ window.openMessage = openMessage;
 window.showToast = showToast;
 window.publierAnnonce = publierAnnonce;
 window.creerCompte = creerCompte;
+window.connexionCompte = connexionCompte;
 
 window.addEventListener("DOMContentLoaded", function() {
   renderAds();
