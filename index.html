@@ -498,55 +498,51 @@ async function creerCompte() {
 async function connexionCompte() {
 
   const email =
-    document.querySelector(
-      ".login-card.blue-bg input[type='text'], .login-card.blue-bg input[type='email']"
-    )?.value.trim();
+    byId("loginEmail")?.value.trim();
 
   const password =
-    document.querySelector(
-      ".login-card.blue-bg input[type='password']"
-    )?.value.trim();
+    byId("loginPassword")?.value.trim();
+
+  console.log("Email saisi :", email);
+  console.log("Password saisi :", password);
 
   const { data, error } = await db
     .from("profils")
     .select("*")
     .eq("identifiant", email)
-    .eq("password", password)
-    .maybeSingle();
+ *  .eq("password", password);
+
+  co*sole.log(data);
+  console.log(erro*);
 
   if (error) {
 
-    console.error(error);
+    showToast(*Erreur connexion");
 
-    showToast(
-      "Erreur connexion"
-    );
+   *return;
+  }
+
+  if*(!data || data.length === 0) {
+
+*   showToast(
+      "*mail ou mot de passe incorrect"
+  * );
 
     return;
   }
 
-  if (!data) {
-
-    showToast(
-      "Email ou mot de passe incorrect"
-    );
-
-    return;
-  }
-
-  localStorage.setItem(
+  local*torage.setItem(
     "userEmail",
-    email
+ *  email
   );
 
-  showToast(
+  show*oast(
     "Connexion réussie ✅"
-  );
+  *;
 
   closeModal(
     "loginModal"
-  );
-
+* );
 }
   
 window.openModal = openModal;
