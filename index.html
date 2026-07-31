@@ -497,52 +497,8 @@ async function creerCompte() {
 }
 async function connexionCompte() {
 
-  const email =
-    byId("loginEmail")?.value.trim();
+  alert("Connexion appelée ✅");
 
-  const password =
-    byId("loginPassword")?.value.trim();
-
-  console.log("Email saisi :", email);
-  console.log("Password saisi :", password);
-
-  const { data, error } = await db
-    .from("profils")
-    .select("*")
-    .eq("identifiant", email)
- *  .eq("password", password);
-
-  co*sole.log(data);
-  console.log(erro*);
-
-  if (error) {
-
-    showToast(*Erreur connexion");
-
-   *return;
-  }
-
-  if*(!data || data.length === 0) {
-
-*   showToast(
-      "*mail ou mot de passe incorrect"
-  * );
-
-    return;
-  }
-
-  local*torage.setItem(
-    "userEmail",
- *  email
-  );
-
-  show*oast(
-    "Connexion réussie ✅"
-  *;
-
-  closeModal(
-    "loginModal"
-* );
 }
   
 window.openModal = openModal;
